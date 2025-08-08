@@ -1,0 +1,206 @@
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+
+@Component({
+  selector: 'app-landing',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
+    <div class="landing-container">
+      <header class="header">
+        <h1 class="main-title">Master Portal</h1>
+        <p class="subtitle">Comprehensive Employees data Management System</p>
+      </header>
+      
+      <div class="entities-grid">
+        <div 
+          *ngFor="let entity of entities" 
+          class="entity-card"
+          (click)="navigateToEntity(entity.route)"
+        >
+          <div class="icon-container">
+            <i [class]="entity.icon"></i>
+          </div>
+          <h3 class="entity-title">{{ entity.title }}</h3>
+          <p class="entity-description">{{ entity.description }}</p>
+          <div class="card-arrow">→</div>
+        </div>
+      </div>
+    </div>
+  `,
+  styles: [`
+    .landing-container {
+      min-height: 100vh;
+      padding: 2rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 4rem;
+      color: white;
+    }
+
+    .main-title {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .subtitle {
+      font-size: 1.25rem;
+      opacity: 0.9;
+      font-weight: 300;
+    }
+
+    .entities-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .entity-card {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .entity-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .entity-card:hover::before {
+      left: 100%;
+    }
+
+    .entity-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.15);
+    }
+
+    .icon-container {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1.5rem;
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: white;
+      transition: transform 0.3s ease;
+    }
+
+    .entity-card:hover .icon-container {
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    .entity-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #1f2937;
+    }
+
+    .entity-description {
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .card-arrow {
+      position: absolute;
+      bottom: 1rem;
+      right: 1.5rem;
+      font-size: 1.5rem;
+      color: #2563eb;
+      opacity: 0;
+      transform: translateX(-10px);
+      transition: all 0.3s ease;
+    }
+
+    .entity-card:hover .card-arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    @media (max-width: 768px) {
+      .landing-container {
+        padding: 1rem;
+      }
+      
+      .main-title {
+        font-size: 2.5rem;
+      }
+      
+      .entities-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+    }
+  `]
+})
+export class LandingComponent {
+  entities = [
+    {
+      title: 'Employee',
+      description: 'Manage employee information, profiles, and personal details',
+      icon: 'fas fa-users',
+      route: '/employee'
+    },
+    {
+      title: 'Budget Category',
+      description: 'Organize and manage budget allocations and financial categories',
+      icon: 'fas fa-chart-pie',
+      route: '/budget-category'
+    },
+    {
+      title: 'Journey',
+      description: 'Track career paths, development, and professional growth',
+      icon: 'fas fa-route',
+      route: '/journey'
+    },
+    {
+      title: 'Grade',
+      description: 'Define job grades, levels, and hierarchical structures',
+      icon: 'fas fa-layer-group',
+      route: '/grade'
+    },
+    {
+      title: 'Role',
+      description: 'Configure roles, permissions, and responsibilities',
+      icon: 'fas fa-user-tag',
+      route: '/role'
+    },
+    {
+      title: 'Technologies',
+      description: 'Manage technical skills, tools, and technology stacks',
+      icon: 'fas fa-laptop-code',
+      route: '/technologies'
+    }
+  ];
+
+  constructor(private router: Router) {}
+
+  navigateToEntity(route: string) {
+    this.router.navigate([route]);
+  }
+}
