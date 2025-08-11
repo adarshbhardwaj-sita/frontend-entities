@@ -1,0 +1,21 @@
+<div class="landing-container">
+  <header class="header">
+    <h1 class="main-title">Master Portal</h1>
+    <p class="subtitle">Comprehensive Employees data Management System</p>
+  </header>
+
+  <div class="entities-grid">
+    <div 
+      *ngFor="let entity of entities" 
+      class="entity-card"
+      (click)="navigateToEntity(entity.route)"
+    >
+      <div class="icon-container">
+        <i [class]="entity.icon"></i>
+      </div>
+      <h3 class="entity-title">{{ entity.title }}</h3>
+      <p class="entity-description">{{ entity.description }}</p>
+      <div class="card-arrow">→</div>
+    </div>
+  </div>
+</div>

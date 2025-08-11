@@ -1,0 +1,110 @@
+<div class="page-container">
+  <header class="page-header">
+    <nav class="breadcrumb">
+      <span (click)="goHome()" class="breadcrumb-link">Home</span>
+      <span class="breadcrumb-separator">></span>
+      <span class="breadcrumb-current">Journey Management</span>
+    </nav>
+    <h1 class="page-title">Career Journey</h1>
+    <p class="page-description">Guide professional development and growth paths</p>
+  </header>
+
+  <div class="table-container">
+    <div class="table-header">
+      <h2>Career Journeys</h2>
+      <button class="btn btn-primary" (click)="openAddModal()">
+        <i class="fas fa-plus"></i> Add Journey
+      </button>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Current Phase</th>
+            <th>Start Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let journey of journeys">
+            <td>{{ journey.id }}</td>
+            <td>{{ journey.currentPhase }}</td>
+            <td>{{ journey.startDate | date }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="getStatusClass(journey.status)">
+                {{ journey.status }}
+              </span>
+            </td>
+            <td class="actions">
+              <button class="btn-icon btn-edit" (click)="editJourney(journey)" title="Edit">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn-icon btn-delete" (click)="deleteJourney(journey.id)" title="Delete">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ isEditing ? 'Edit Journey' : 'Add Journey' }}</h3>
+        <button class="modal-close" (click)="closeModal()">×</button>
+      </div>
+      <form (ngSubmit)="saveJourney()" #journeyForm="ngForm">
+        <div class="form-group">
+          <label for="currentPhase">Current Phase</label>
+          <input
+            type="text"
+            id="currentPhase"
+            [(ngModel)]="currentJourney.currentPhase"
+            name="currentPhase"
+            required
+            class="form-control"
+          >
+        </div>
+        <div class="form-group">
+          <label for="startDate">Start Date</label>
+          <input
+            type="date"
+            id="startDate"
+            [(ngModel)]="currentJourney.startDate"
+            name="startDate"
+            required
+            class="form-control"
+          >
+        </div>
+        <div class="form-group">
+          <label for="status">Status</label>
+          <select
+            id="status"
+            [(ngModel)]="currentJourney.status"
+            name="status"
+            required
+            class="form-control"
+          >
+            <option value="">Select Status</option>
+            <option value="Active">Active</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+            <option value="On Hold">On Hold</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" [disabled]="!journeyForm.form.valid">
+            {{ isEditing ? 'Update' : 'Add' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

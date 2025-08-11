@@ -1,0 +1,102 @@
+<div class="page-container">
+  <header class="page-header">
+    <nav class="breadcrumb">
+      <span (click)="goHome()" class="breadcrumb-link">Home</span>
+      <span class="breadcrumb-separator">></span>
+      <span class="breadcrumb-current">Budget Category</span>
+    </nav>
+    <h1 class="page-title">Budget Category Management</h1>
+    <p class="page-description">Organize and control budget allocations</p>
+  </header>
+
+  <div class="table-container">
+    <div class="table-header">
+      <h2>Budget Categories</h2>
+      <button class="btn btn-primary" (click)="openAddModal()">
+        <i class="fas fa-plus"></i> Add Category
+      </button>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Category Type</th>
+            <th>Budget Amount</th>
+            <th>Financial Year</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let category of budgetCategories">
+            <td>{{ category.id }}</td>
+            <td>{{ category.categoryType }}</td>
+            <td>{{ category.budgetAmount | number }}</td>
+            <td>{{ category.financialYear }}</td>
+            <td class="actions">
+              <button class="btn-icon btn-edit" (click)="editCategory(category)" title="Edit">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn-icon btn-delete" (click)="deleteCategory(category.id)" title="Delete">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ isEditing ? 'Edit Budget Category' : 'Add Budget Category' }}</h3>
+        <button class="modal-close" (click)="closeModal()">×</button>
+      </div>
+      <form (ngSubmit)="saveCategory()" #categoryForm="ngForm">
+        <div class="form-group">
+          <label for="categoryType">Category Type</label>
+          <input 
+            type="text" 
+            id="categoryType" 
+            [(ngModel)]="currentCategory.categoryType" 
+            name="categoryType" 
+            required 
+            class="form-control"
+          >
+        </div>
+        <div class="form-group">
+          <label for="budgetAmount">Budget Amount</label>
+          <input 
+            type="number" 
+            id="budgetAmount" 
+            [(ngModel)]="currentCategory.budgetAmount" 
+            name="budgetAmount" 
+            required 
+            class="form-control"
+          >
+        </div>
+        <div class="form-group">
+          <label for="financialYear">Financial Year</label>
+          <input 
+            type="text" 
+            id="financialYear" 
+            [(ngModel)]="currentCategory.financialYear" 
+            name="financialYear" 
+            required 
+            class="form-control"
+            placeholder="e.g., 2024-25"
+          >
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" [disabled]="!categoryForm.form.valid">
+            {{ isEditing ? 'Update' : 'Add' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
