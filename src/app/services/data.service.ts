@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface Employee {
@@ -45,13 +46,9 @@ export interface Technology {
   providedIn: 'root'
 })
 export class DataService {
-  private employees = new BehaviorSubject<Employee[]>([
-    { id: 1, name: 'John Doe', email: 'john.doe@company.com' },
-    { id: 2, name: 'Jane Smith', email: 'jane.smith@company.com' },
-    { id: 3, name: 'Mike Johnson', email: 'mike.johnson@company.com' },
-    { id: 4, name: 'Sarah Wilson', email: 'sarah.wilson@company.com' }
-  ]);
+  private apiUrl = 'https://your-api-url.com/api'; // Replace with your actual API URL
 
+  // Existing BehaviorSubjects for other entities
   private budgetCategories = new BehaviorSubject<BudgetCategory[]>([
     { id: 1, categoryType: 'Operations', budgetAmount: 500000, financialYear: '2024-25' },
     { id: 2, categoryType: 'Marketing', budgetAmount: 200000, financialYear: '2024-25' },
@@ -87,33 +84,26 @@ export class DataService {
     { id: 4, stack: 'Python, Django, PostgreSQL' }
   ]);
 
-  // Employee methods
+  constructor(private http: HttpClient) { }
+
+  // Employee methods using HttpClient
   getEmployees(): Observable<Employee[]> {
-    return this.employees.asObservable();
+    return this.http.get<Employee[]>(`${this.apiUrl}/employees`);
   }
 
-  addEmployee(employee: Omit<Employee, 'id'>): void {
-    const currentEmployees = this.employees.value;
-    const newId = Math.max(...currentEmployees.map(e => e.id)) + 1;
-    const newEmployee = { ...employee, id: newId };
-    this.employees.next([...currentEmployees, newEmployee]);
+  addEmployee(employee: Omit<Employee, 'id'>): Observable<Employee> {
+    return this.http.post<Employee>(`${this.apiUrl}/employees`, employee);
   }
 
-  updateEmployee(employee: Employee): void {
-    const currentEmployees = this.employees.value;
-    const index = currentEmployees.findIndex(e => e.id === employee.id);
-    if (index !== -1) {
-      currentEmployees[index] = employee;
-      this.employees.next([...currentEmployees]);
-    }
+  updateEmployee(employee: Employee): Observable<Employee> {
+    return this.http.put<Employee>(`${this.apiUrl}/employees/${employee.id}`, employee);
   }
 
-  deleteEmployee(id: number): void {
-    const currentEmployees = this.employees.value;
-    this.employees.next(currentEmployees.filter(e => e.id !== id));
+  deleteEmployee(id: number): Observable<{}> {
+    return this.http.delete(`${this.apiUrl}/employees/${id}`);
   }
 
-  // Budget Category methods
+  // Existing methods for other entities
   getBudgetCategories(): Observable<BudgetCategory[]> {
     return this.budgetCategories.asObservable();
   }
@@ -139,7 +129,6 @@ export class DataService {
     this.budgetCategories.next(currentCategories.filter(c => c.id !== id));
   }
 
-  // Journey methods
   getJourneys(): Observable<Journey[]> {
     return this.journeys.asObservable();
   }
@@ -165,7 +154,6 @@ export class DataService {
     this.journeys.next(currentJourneys.filter(j => j.id !== id));
   }
 
-  // Grade methods
   getGrades(): Observable<Grade[]> {
     return this.grades.asObservable();
   }
@@ -191,7 +179,6 @@ export class DataService {
     this.grades.next(currentGrades.filter(g => g.id !== id));
   }
 
-  // Role methods
   getRoles(): Observable<Role[]> {
     return this.roles.asObservable();
   }
@@ -217,7 +204,6 @@ export class DataService {
     this.roles.next(currentRoles.filter(r => r.id !== id));
   }
 
-  // Technology methods
   getTechnologies(): Observable<Technology[]> {
     return this.technologies.asObservable();
   }
