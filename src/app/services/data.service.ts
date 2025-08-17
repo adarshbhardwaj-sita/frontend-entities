@@ -84,6 +84,8 @@ export class DataService {
 
   // Mock data for development/testing
   private getMockEmployees(params?: PaginationParams): Observable<PaginatedResponse<Employee>> {
+    console.log('getMockEmployees called with params:', params);
+    
     // Generate mock employee data matching backend format
     const mockEmployees: Employee[] = [
       { employee_Id: 1, name: 'John Doe', email: 'john.doe@company.com', department: 'Engineering', designation: 'Senior Software Engineer' },
@@ -109,6 +111,7 @@ export class DataService {
     ];
 
     return new Observable(observer => {
+      console.log('Mock data observable created');
       setTimeout(() => {
         const page = params?.page || 1;
         const pageSize = params?.pageSize || 10;
@@ -124,6 +127,7 @@ export class DataService {
           totalPages: Math.ceil(mockEmployees.length / pageSize)
         };
         
+        console.log('Mock response created:', response);
         observer.next(response);
         observer.complete();
       }, 500); // Simulate API delay

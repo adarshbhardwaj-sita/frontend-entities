@@ -23,6 +23,7 @@ export class EmployeeComponent implements OnInit {
   totalItems = 0;
   totalPages = 0;
   loading = false;
+  error: string | null = null;
   
   // Make Math available in template
   Math = Math;
@@ -30,27 +31,47 @@ export class EmployeeComponent implements OnInit {
   constructor(private router: Router, private dataService: DataService) { }
 
   ngOnInit() {
+    console.log('EmployeeComponent initialized');
     this.loadEmployees();
   }
 
   loadEmployees() {
+    console.log('Loading employees...');
     this.loading = true;
+    this.error = null;
+    
     const params: PaginationParams = {
       page: this.currentPage,
       pageSize: this.pageSize
     };
     
+    console.log('Pagination params:', params);
+    
     this.dataService.getEmployees(params).subscribe({
       next: (response: PaginatedResponse<Employee>) => {
-        this.employees = response.data;
-        this.totalItems = response.total;
-        this.totalPages = response.totalPages;
-        this.currentPage = response.page;
+        console.log('Response received:', response);
+        if (response && response.data) {
+          this.employees = response.data;
+          this.totalItems = response.total || 0;
+          this.totalPages = response.totalPages || 0;
+          this.currentPage = response.page || 1;
+        } else {
+          this.employees = [];
+          this.totalItems = 0;
+          this.totalPages = 0;
+          this.currentPage = 1;
+        }
         this.loading = false;
+        console.log('Employees loaded:', this.employees);
       },
       error: (error) => {
         console.error('Error loading employees:', error);
+        this.employees = [];
+        this.totalItems = 0;
+        this.totalPages = 0;
+        this.currentPage = 1;
         this.loading = false;
+        this.error = 'Failed to load employees. Please try again.';
       }
     });
   }
@@ -143,6 +164,10 @@ export class EmployeeComponent implements OnInit {
   }
 
   getPageNumbers(): number[] {
+    if (!this.totalPages || this.totalPages <= 0) {
+      return [];
+    }
+    
     const pages: number[] = [];
     const maxVisiblePages = 5;
     let startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));

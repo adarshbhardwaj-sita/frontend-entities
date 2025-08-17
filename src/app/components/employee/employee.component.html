@@ -24,8 +24,17 @@
         <p>Loading employees...</p>
       </div>
 
+      <!-- Error message -->
+      <div *ngIf="!loading && error" class="error-container">
+        <p class="error-message">{{ error }}</p>
+        <button class="btn btn-primary" (click)="loadEmployees()">Retry</button>
+      </div>
+
       <!-- Table content -->
-      <table class="data-table" *ngIf="!loading">
+      <table
+        class="data-table"
+        *ngIf="!loading && !error && employees && employees.length > 0"
+      >
         <thead>
           <tr>
             <th>ID</th>
@@ -64,13 +73,19 @@
       </table>
 
       <!-- No data message -->
-      <div *ngIf="!loading && employees.length === 0" class="no-data">
+      <div
+        *ngIf="!loading && !error && (!employees || employees.length === 0)"
+        class="no-data"
+      >
         <p>No employees found.</p>
       </div>
     </div>
 
     <!-- Pagination Controls -->
-    <div class="pagination-controls" *ngIf="totalPages > 1">
+    <div
+      class="pagination-controls"
+      *ngIf="!loading && !error && totalPages > 1"
+    >
       <div class="pagination-info">
         <span
           >Showing {{ (currentPage - 1) * pageSize + 1 }} to
