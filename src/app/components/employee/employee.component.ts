@@ -77,7 +77,7 @@ export class EmployeeComponent implements OnInit {
   }
 
   saveEmployee() {
-    if (this.isEditing && this.currentEmployee.id) {
+    if (this.isEditing && this.currentEmployee.employee_Id) {
       this.dataService.updateEmployee(this.currentEmployee as Employee).subscribe({
         next: () => {
           this.loadEmployees();
@@ -88,7 +88,7 @@ export class EmployeeComponent implements OnInit {
         }
       });
     } else {
-      this.dataService.addEmployee(this.currentEmployee as Omit<Employee, 'id'>).subscribe({
+      this.dataService.addEmployee(this.currentEmployee as Omit<Employee, 'employee_Id'>).subscribe({
         next: () => {
           this.loadEmployees();
           this.closeModal();
@@ -106,7 +106,7 @@ export class EmployeeComponent implements OnInit {
         next: () => {
           this.loadEmployees();
         },
-        error: (error : Error) => {
+        error: (error: Error) => {
           console.error('Error deleting employee:', error);
         }
       });

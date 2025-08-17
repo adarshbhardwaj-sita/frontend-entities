@@ -3,10 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface Employee {
-  id: number;
+  employee_Id: number;
   name: string;
   email: string;
-  description?: string;
+  department: string;
+  designation: string;
 }
 
 export interface PaginatedResponse<T> {
@@ -59,16 +60,16 @@ export interface Technology {
   providedIn: 'root'
 })
 export class DataService {
-  private apiUrl = 'https://your-api-url.com/api'; // Replace with your actual API URL
+  private apiUrl = 'https://localhost:7001/api'; // Update with your .NET API URL
 
   constructor(private http: HttpClient) { }
 
   // Employee methods using HttpClient
   getEmployees(params?: PaginationParams): Observable<PaginatedResponse<Employee>> {
     // For development/testing, return mock data if API is not available
-    // if (!this.apiUrl || this.apiUrl === 'https://your-api-url.com/api') {
-    //   return this.getMockEmployees(params);
-    // }
+    if (!this.apiUrl || this.apiUrl === 'https://localhost:7001/api') {
+      return this.getMockEmployees(params);
+    }
     
     let url = `${this.apiUrl}/employees`;
     if (params) {
@@ -83,28 +84,28 @@ export class DataService {
 
   // Mock data for development/testing
   private getMockEmployees(params?: PaginationParams): Observable<PaginatedResponse<Employee>> {
-    // Generate mock employee data
+    // Generate mock employee data matching backend format
     const mockEmployees: Employee[] = [
-      { id: 1, name: 'John Doe', email: 'john.doe@company.com', description: 'Senior Software Engineer' },
-      { id: 2, name: 'Jane Smith', email: 'jane.smith@company.com', description: 'Product Manager' },
-      { id: 3, name: 'Mike Johnson', email: 'mike.johnson@company.com', description: 'UI/UX Designer' },
-      { id: 4, name: 'Sarah Wilson', email: 'sarah.wilson@company.com', description: 'Data Analyst' },
-      { id: 5, name: 'David Brown', email: 'david.brown@company.com', description: 'DevOps Engineer' },
-      { id: 6, name: 'Lisa Davis', email: 'lisa.davis@company.com', description: 'Frontend Developer' },
-      { id: 7, name: 'Tom Miller', email: 'tom.miller@company.com', description: 'Backend Developer' },
-      { id: 8, name: 'Emily Garcia', email: 'emily.garcia@company.com', description: 'QA Engineer' },
-      { id: 9, name: 'Chris Lee', email: 'chris.lee@company.com', description: 'System Administrator' },
-      { id: 10, name: 'Amanda Taylor', email: 'amanda.taylor@company.com', description: 'Business Analyst' },
-      { id: 11, name: 'Robert Anderson', email: 'robert.anderson@company.com', description: 'Project Manager' },
-      { id: 12, name: 'Jennifer Martinez', email: 'jennifer.martinez@company.com', description: 'Scrum Master' },
-      { id: 13, name: 'Michael Thompson', email: 'michael.thompson@company.com', description: 'Technical Lead' },
-      { id: 14, name: 'Jessica White', email: 'jessica.white@company.com', description: 'UX Researcher' },
-      { id: 15, name: 'Daniel Clark', email: 'daniel.clark@company.com', description: 'Mobile Developer' },
-      { id: 16, name: 'Ashley Rodriguez', email: 'ashley.rodriguez@company.com', description: 'Data Scientist' },
-      { id: 17, name: 'Kevin Lewis', email: 'kevin.lewis@company.com', description: 'Network Engineer' },
-      { id: 18, name: 'Stephanie Hall', email: 'stephanie.hall@company.com', description: 'Security Analyst' },
-      { id: 19, name: 'Ryan Young', email: 'ryan.young@company.com', description: 'Cloud Architect' },
-      { id: 20, name: 'Nicole King', email: 'nicole.king@company.com', description: 'Product Owner' }
+      { employee_Id: 1, name: 'John Doe', email: 'john.doe@company.com', department: 'Engineering', designation: 'Senior Software Engineer' },
+      { employee_Id: 2, name: 'Jane Smith', email: 'jane.smith@company.com', department: 'Product', designation: 'Product Manager' },
+      { employee_Id: 3, name: 'Mike Johnson', email: 'mike.johnson@company.com', department: 'Design', designation: 'UI/UX Designer' },
+      { employee_Id: 4, name: 'Sarah Wilson', email: 'sarah.wilson@company.com', department: 'Analytics', designation: 'Data Analyst' },
+      { employee_Id: 5, name: 'David Brown', email: 'david.brown@company.com', department: 'Engineering', designation: 'DevOps Engineer' },
+      { employee_Id: 6, name: 'Lisa Davis', email: 'lisa.davis@company.com', department: 'Engineering', designation: 'Frontend Developer' },
+      { employee_Id: 7, name: 'Tom Miller', email: 'tom.miller@company.com', department: 'Engineering', designation: 'Backend Developer' },
+      { employee_Id: 8, name: 'Emily Garcia', email: 'emily.garcia@company.com', department: 'Engineering', designation: 'QA Engineer' },
+      { employee_Id: 9, name: 'Chris Lee', email: 'chris.lee@company.com', department: 'IT', designation: 'System Administrator' },
+      { employee_Id: 10, name: 'Amanda Taylor', email: 'amanda.taylor@company.com', department: 'Business', designation: 'Business Analyst' },
+      { employee_Id: 11, name: 'Robert Anderson', email: 'robert.anderson@company.com', department: 'Project Management', designation: 'Project Manager' },
+      { employee_Id: 12, name: 'Jennifer Martinez', email: 'jennifer.martinez@company.com', department: 'Agile', designation: 'Scrum Master' },
+      { employee_Id: 13, name: 'Michael Thompson', email: 'michael.thompson@company.com', department: 'Engineering', designation: 'Technical Lead' },
+      { employee_Id: 14, name: 'Jessica White', email: 'jessica.white@company.com', department: 'Design', designation: 'UX Researcher' },
+      { employee_Id: 15, name: 'Daniel Clark', email: 'daniel.clark@company.com', department: 'Engineering', designation: 'Mobile Developer' },
+      { employee_Id: 16, name: 'Ashley Rodriguez', email: 'ashley.rodriguez@company.com', department: 'Analytics', designation: 'Data Scientist' },
+      { employee_Id: 17, name: 'Kevin Lewis', email: 'kevin.lewis@company.com', department: 'IT', designation: 'Network Engineer' },
+      { employee_Id: 18, name: 'Stephanie Hall', email: 'stephanie.hall@company.com', department: 'Security', designation: 'Security Analyst' },
+      { employee_Id: 19, name: 'Ryan Young', email: 'ryan.young@company.com', department: 'Engineering', designation: 'Cloud Architect' },
+      { employee_Id: 20, name: 'Nicole King', email: 'nicole.king@company.com', department: 'Product', designation: 'Product Owner' }
     ];
 
     return new Observable(observer => {
@@ -129,12 +130,12 @@ export class DataService {
     });
   }
 
-  addEmployee(employee: Omit<Employee, 'id'>): Observable<Employee> {
+  addEmployee(employee: Omit<Employee, 'employee_Id'>): Observable<Employee> {
     return this.http.post<Employee>(`${this.apiUrl}/employees`, employee);
   }
 
   updateEmployee(employee: Employee): Observable<Employee> {
-    return this.http.put<Employee>(`${this.apiUrl}/employees/${employee.id}`, employee);
+    return this.http.put<Employee>(`${this.apiUrl}/employees/${employee.employee_Id}`, employee);
   }
 
   deleteEmployee(id: number): Observable<{}> {

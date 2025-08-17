@@ -31,16 +31,18 @@
             <th>ID</th>
             <th>Name</th>
             <th>Email</th>
-            <th>Description</th>
+            <th>Department</th>
+            <th>Designation</th>
             <th class="actions-header">Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let employee of employees">
-            <td>{{ employee.id }}</td>
+            <td>{{ employee.employee_Id }}</td>
             <td>{{ employee.name }}</td>
             <td>{{ employee.email }}</td>
-            <td>{{ employee.description }}</td>
+            <td>{{ employee.department }}</td>
+            <td>{{ employee.designation }}</td>
             <td class="actions">
               <button
                 class="btn-icon btn-edit"
@@ -51,7 +53,7 @@
               </button>
               <button
                 class="btn-icon btn-delete"
-                (click)="deleteEmployee(employee.id)"
+                (click)="deleteEmployee(employee.employee_Id)"
                 title="Delete"
               >
                 <i class="fas fa-trash"></i>
@@ -175,14 +177,26 @@
           />
         </div>
         <div class="form-group">
-          <label for="description">Description</label>
-          <textarea
-            id="description"
-            [(ngModel)]="currentEmployee.description"
-            name="description"
+          <label for="department">Department</label>
+          <input
+            type="text"
+            id="department"
+            [(ngModel)]="currentEmployee.department"
+            name="department"
+            required
             class="form-control"
-            rows="3"
-          ></textarea>
+          />
+        </div>
+        <div class="form-group">
+          <label for="designation">Designation</label>
+          <input
+            type="text"
+            id="designation"
+            [(ngModel)]="currentEmployee.designation"
+            name="designation"
+            required
+            class="form-control"
+          />
         </div>
         <div class="modal-actions">
           <button
