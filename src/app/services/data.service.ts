@@ -9,6 +9,19 @@ export interface Employee {
   description?: string;
 }
 
+export interface PaginatedResponse<T> {
+  data: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
+export interface PaginationParams {
+  page: number;
+  pageSize: number;
+}
+
 export interface BudgetCategory {
   id: number;
   categoryType: string;
@@ -51,8 +64,69 @@ export class DataService {
   constructor(private http: HttpClient) { }
 
   // Employee methods using HttpClient
-  getEmployees(): Observable<Employee[]> {
-    return this.http.get<Employee[]>(`${this.apiUrl}/employees`);
+  getEmployees(params?: PaginationParams): Observable<PaginatedResponse<Employee>> {
+    // For development/testing, return mock data if API is not available
+    // if (!this.apiUrl || this.apiUrl === 'https://your-api-url.com/api') {
+    //   return this.getMockEmployees(params);
+    // }
+    
+    let url = `${this.apiUrl}/employees`;
+    if (params) {
+      const queryParams = new URLSearchParams({
+        page: params.page.toString(),
+        pageSize: params.pageSize.toString()
+      });
+      url += `?${queryParams.toString()}`;
+    }
+    return this.http.get<PaginatedResponse<Employee>>(url);
+  }
+
+  // Mock data for development/testing
+  private getMockEmployees(params?: PaginationParams): Observable<PaginatedResponse<Employee>> {
+    // Generate mock employee data
+    const mockEmployees: Employee[] = [
+      { id: 1, name: 'John Doe', email: 'john.doe@company.com', description: 'Senior Software Engineer' },
+      { id: 2, name: 'Jane Smith', email: 'jane.smith@company.com', description: 'Product Manager' },
+      { id: 3, name: 'Mike Johnson', email: 'mike.johnson@company.com', description: 'UI/UX Designer' },
+      { id: 4, name: 'Sarah Wilson', email: 'sarah.wilson@company.com', description: 'Data Analyst' },
+      { id: 5, name: 'David Brown', email: 'david.brown@company.com', description: 'DevOps Engineer' },
+      { id: 6, name: 'Lisa Davis', email: 'lisa.davis@company.com', description: 'Frontend Developer' },
+      { id: 7, name: 'Tom Miller', email: 'tom.miller@company.com', description: 'Backend Developer' },
+      { id: 8, name: 'Emily Garcia', email: 'emily.garcia@company.com', description: 'QA Engineer' },
+      { id: 9, name: 'Chris Lee', email: 'chris.lee@company.com', description: 'System Administrator' },
+      { id: 10, name: 'Amanda Taylor', email: 'amanda.taylor@company.com', description: 'Business Analyst' },
+      { id: 11, name: 'Robert Anderson', email: 'robert.anderson@company.com', description: 'Project Manager' },
+      { id: 12, name: 'Jennifer Martinez', email: 'jennifer.martinez@company.com', description: 'Scrum Master' },
+      { id: 13, name: 'Michael Thompson', email: 'michael.thompson@company.com', description: 'Technical Lead' },
+      { id: 14, name: 'Jessica White', email: 'jessica.white@company.com', description: 'UX Researcher' },
+      { id: 15, name: 'Daniel Clark', email: 'daniel.clark@company.com', description: 'Mobile Developer' },
+      { id: 16, name: 'Ashley Rodriguez', email: 'ashley.rodriguez@company.com', description: 'Data Scientist' },
+      { id: 17, name: 'Kevin Lewis', email: 'kevin.lewis@company.com', description: 'Network Engineer' },
+      { id: 18, name: 'Stephanie Hall', email: 'stephanie.hall@company.com', description: 'Security Analyst' },
+      { id: 19, name: 'Ryan Young', email: 'ryan.young@company.com', description: 'Cloud Architect' },
+      { id: 20, name: 'Nicole King', email: 'nicole.king@company.com', description: 'Product Owner' }
+    ];
+
+    return new Observable(observer => {
+      setTimeout(() => {
+        const page = params?.page || 1;
+        const pageSize = params?.pageSize || 10;
+        const startIndex = (page - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+        const paginatedData = mockEmployees.slice(startIndex, endIndex);
+        
+        const response: PaginatedResponse<Employee> = {
+          data: paginatedData,
+          total: mockEmployees.length,
+          page: page,
+          pageSize: pageSize,
+          totalPages: Math.ceil(mockEmployees.length / pageSize)
+        };
+        
+        observer.next(response);
+        observer.complete();
+      }, 500); // Simulate API delay
+    });
   }
 
   addEmployee(employee: Omit<Employee, 'id'>): Observable<Employee> {

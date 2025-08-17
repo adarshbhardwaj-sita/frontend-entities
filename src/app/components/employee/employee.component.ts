@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { DataService, Employee } from '../../services/data.service';
+import { DataService, Employee, PaginatedResponse, PaginationParams } from '../../services/data.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -16,6 +16,16 @@ export class EmployeeComponent implements OnInit {
   showModal = false;
   isEditing = false;
   currentEmployee: Partial<Employee> = {};
+  
+  // Pagination properties
+  currentPage = 1;
+  pageSize = 10;
+  totalItems = 0;
+  totalPages = 0;
+  loading = false;
+  
+  // Make Math available in template
+  Math = Math;
 
   constructor(private router: Router, private dataService: DataService) { }
 
@@ -24,12 +34,23 @@ export class EmployeeComponent implements OnInit {
   }
 
   loadEmployees() {
-    this.dataService.getEmployees().subscribe({
-      next: (employees) => {
-        this.employees = employees;
+    this.loading = true;
+    const params: PaginationParams = {
+      page: this.currentPage,
+      pageSize: this.pageSize
+    };
+    
+    this.dataService.getEmployees(params).subscribe({
+      next: (response: PaginatedResponse<Employee>) => {
+        this.employees = response.data;
+        this.totalItems = response.total;
+        this.totalPages = response.totalPages;
+        this.currentPage = response.page;
+        this.loading = false;
       },
       error: (error) => {
         console.error('Error loading employees:', error);
+        this.loading = false;
       }
     });
   }
@@ -90,5 +111,51 @@ export class EmployeeComponent implements OnInit {
         }
       });
     }
+  }
+
+  // Pagination methods
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.loadEmployees();
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.loadEmployees();
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.loadEmployees();
+    }
+  }
+
+  onPageSizeChange(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    this.pageSize = parseInt(target.value);
+    this.currentPage = 1; // Reset to first page when changing page size
+    this.loadEmployees();
+  }
+
+  getPageNumbers(): number[] {
+    const pages: number[] = [];
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(this.totalPages, startPage + maxVisiblePages - 1);
+    
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+    
+    return pages;
   }
 }

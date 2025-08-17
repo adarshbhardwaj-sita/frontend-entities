@@ -18,7 +18,14 @@
     </div>
 
     <div class="table-wrapper">
-      <table class="data-table">
+      <!-- Loading indicator -->
+      <div *ngIf="loading" class="loading-container">
+        <div class="loading-spinner"></div>
+        <p>Loading employees...</p>
+      </div>
+
+      <!-- Table content -->
+      <table class="data-table" *ngIf="!loading">
         <thead>
           <tr>
             <th>ID</th>
@@ -35,23 +42,105 @@
             <td>{{ employee.email }}</td>
             <td>{{ employee.description }}</td>
             <td class="actions">
-              <button class="btn-icon btn-edit" (click)="editEmployee(employee)" title="Edit">
+              <button
+                class="btn-icon btn-edit"
+                (click)="editEmployee(employee)"
+                title="Edit"
+              >
                 <i class="fas fa-edit"></i>
               </button>
-              <button class="btn-icon btn-delete" (click)="deleteEmployee(employee.id)" title="Delete">
+              <button
+                class="btn-icon btn-delete"
+                (click)="deleteEmployee(employee.id)"
+                title="Delete"
+              >
                 <i class="fas fa-trash"></i>
               </button>
             </td>
           </tr>
         </tbody>
       </table>
+
+      <!-- No data message -->
+      <div *ngIf="!loading && employees.length === 0" class="no-data">
+        <p>No employees found.</p>
+      </div>
     </div>
 
     <!-- Pagination Controls -->
-    <div class="pagination-controls">
-      <button (click)="prevPage()" [disabled]="currentPage === 1">Prev</button>
-      <span>Page {{currentPage}} of {{totalPages}}</span>
-      <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+    <div class="pagination-controls" *ngIf="totalPages > 1">
+      <div class="pagination-info">
+        <span
+          >Showing {{ (currentPage - 1) * pageSize + 1 }} to
+          {{ Math.min(currentPage * pageSize, totalItems) }} of
+          {{ totalItems }} employees</span
+        >
+      </div>
+
+      <div class="pagination-navigation">
+        <button
+          class="btn btn-secondary"
+          (click)="goToPage(1)"
+          [disabled]="currentPage === 1"
+          title="First Page"
+        >
+          <i class="fas fa-angle-double-left"></i>
+        </button>
+
+        <button
+          class="btn btn-secondary"
+          (click)="prevPage()"
+          [disabled]="currentPage === 1"
+          title="Previous Page"
+        >
+          <i class="fas fa-angle-left"></i>
+        </button>
+
+        <div class="page-numbers">
+          <button
+            *ngFor="let page of getPageNumbers()"
+            class="btn btn-page"
+            [class.active]="page === currentPage"
+            (click)="goToPage(page)"
+          >
+            {{ page }}
+          </button>
+        </div>
+
+        <button
+          class="btn btn-secondary"
+          (click)="nextPage()"
+          [disabled]="currentPage === totalPages"
+          title="Next Page"
+        >
+          <i class="fas fa-angle-right"></i>
+        </button>
+
+        <button
+          class="btn btn-secondary"
+          (click)="goToPage(totalPages)"
+          [disabled]="currentPage === totalPages"
+          title="Last Page"
+        >
+          <i class="fas fa-angle-double-right"></i>
+        </button>
+      </div>
+
+      <div class="page-size-control">
+        <label for="pageSize">Show:</label>
+        <select
+          id="pageSize"
+          [value]="pageSize"
+          (change)="onPageSizeChange($event)"
+          class="form-control"
+        >
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+        </select>
+        <span>per page</span>
+      </div>
     </div>
   </div>
 
@@ -59,7 +148,7 @@
   <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
     <div class="modal" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <h3>{{ isEditing ? 'Edit Employee' : 'Add Employee' }}</h3>
+        <h3>{{ isEditing ? "Edit Employee" : "Add Employee" }}</h3>
         <button class="modal-close" (click)="closeModal()">×</button>
       </div>
       <form (ngSubmit)="saveEmployee()" #employeeForm="ngForm">
@@ -72,7 +161,7 @@
             name="name"
             required
             class="form-control"
-          >
+          />
         </div>
         <div class="form-group">
           <label for="email">Email</label>
@@ -83,7 +172,7 @@
             name="email"
             required
             class="form-control"
-          >
+          />
         </div>
         <div class="form-group">
           <label for="description">Description</label>
@@ -96,9 +185,19 @@
           ></textarea>
         </div>
         <div class="modal-actions">
-          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary" [disabled]="!employeeForm.form.valid">
-            {{ isEditing ? 'Update' : 'Add' }}
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="closeModal()"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="!employeeForm.form.valid"
+          >
+            {{ isEditing ? "Update" : "Add" }}
           </button>
         </div>
       </form>
