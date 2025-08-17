@@ -50,10 +50,10 @@ export class EmployeeComponent implements OnInit {
     this.dataService.getEmployees(params).subscribe({
       next: (response: PaginatedResponse<Employee>) => {
         console.log('Response received:', response);
-        if (response && response.data) {
-          this.employees = response.data;
-          this.totalItems = response.total || 0;
-          this.totalPages = response.totalPages || 0;
+        if (response && response.items) {
+          this.employees = response.items;
+          this.totalItems = response.totalCount || 0;
+          this.totalPages = response.totalPages || Math.ceil((response.totalCount || 0) / (response.pageSize || 10));
           this.currentPage = response.page || 1;
         } else {
           this.employees = [];

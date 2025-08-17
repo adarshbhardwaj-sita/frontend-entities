@@ -8,7 +8,7 @@ Your .NET backend should return data in this format:
 
 ```json
 {
-  "data": [
+  "items": [
     {
       "employee_Id": 9,
       "name": "vyom",
@@ -17,10 +17,9 @@ Your .NET backend should return data in this format:
       "designation": "string"
     }
   ],
-  "total": 20,
+  "totalCount": 16,
   "page": 1,
-  "pageSize": 10,
-  "totalPages": 2
+  "pageSize": 10
 }
 ```
 
@@ -56,26 +55,19 @@ public class PaginationRequest
 ```csharp
 public class PaginatedResponse<T>
 {
-    public List<T> Data { get; set; } = new();
-    public int Total { get; set; }
+    public List<T> Items { get; set; } = new();
+    public int TotalCount { get; set; }
     public int Page { get; set; }
     public int PageSize { get; set; }
-    public int TotalPages { get; set; }
 
-    public PaginatedResponse(List<T> data, int total, int page, int pageSize)
-    {
-        Data = data;
-        Total = total;
-        Page = page;
-        PageSize = pageSize;
-        TotalPages = (int)Math.Ceiling((double)total / pageSize);
-    }
+    // Optional: Calculate total pages on the frontend
+    public int TotalPages => (int)Math.Ceiling((double)TotalCount / PageSize);
 }
 ```
 
 ## API Endpoints
 
-### GET /api/employees
+### GET /api/Employee/paged
 
 **Query Parameters:**
 
@@ -85,20 +77,19 @@ public class PaginatedResponse<T>
 **Example Requests:**
 
 ```
-GET /api/employees?page=1&pageSize=10
-GET /api/employees?page=2&pageSize=5
-GET /api/employees
+GET /api/Employee/paged?page=1&pageSize=10
+GET /api/Employee/paged?page=2&pageSize=5
+GET /api/Employee/paged
 ```
 
 **Response:**
 
 ```json
 {
-  "data": [...],
-  "total": 20,
+  "items": [...],
+  "totalCount": 16,
   "page": 1,
-  "pageSize": 10,
-  "totalPages": 2
+  "pageSize": 10
 }
 ```
 
@@ -142,15 +133,27 @@ public async Task<PaginatedResponse<Employee>> GetEmployeesAsync(PaginationReque
         .AsNoTracking()
         .OrderBy(e => e.Name);
 
-    return await query.ToPaginatedResponseAsync(request);
+    var totalCount = await query.CountAsync();
+    var items = await query
+        .Skip((request.Page - 1) * request.PageSize)
+        .Take(request.PageSize)
+        .ToListAsync();
+
+    return new PaginatedResponse<Employee>
+    {
+        Items = items,
+        TotalCount = totalCount,
+        Page = request.Page,
+        PageSize = request.PageSize
+    };
 }
 ```
 
 ### 3. Update Controller
 
 ```csharp
-[HttpGet]
-public async Task<ActionResult<PaginatedResponse<Employee>>> GetEmployees(
+[HttpGet("paged")]
+public async Task<ActionResult<PaginatedResponse<Employee>>> GetEmployeesPaged(
     [FromQuery] PaginationRequest request)
 {
     try
@@ -184,13 +187,13 @@ The Angular frontend currently uses mock data. To test with your .NET backend:
 
 ```bash
 # Test pagination
-curl "https://localhost:7001/api/employees?page=1&pageSize=5"
+curl "http://localhost:5145/api/Employee/paged?page=1&pageSize=5"
 
 # Test without parameters (should use defaults)
-curl "https://localhost:7001/api/employees"
+curl "http://localhost:5145/api/Employee/paged"
 
 # Test invalid parameters
-curl "https://localhost:7001/api/employees?page=0&pageSize=5"
+curl "http://localhost:5145/api/Employee/paged?page=0&pageSize=5"
 ```
 
 ## Error Handling

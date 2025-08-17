@@ -11,11 +11,11 @@ export interface Employee {
 }
 
 export interface PaginatedResponse<T> {
-  data: T[];
-  total: number;
+  items: T[];
+  totalCount: number;
   page: number;
   pageSize: number;
-  totalPages: number;
+  totalPages?: number; // Optional since backend doesn't provide it
 }
 
 export interface PaginationParams {
@@ -66,12 +66,8 @@ export class DataService {
 
   // Employee methods using HttpClient
   getEmployees(params?: PaginationParams): Observable<PaginatedResponse<Employee>> {
-    // For development/testing, return mock data if API is not available
-    if (!this.apiUrl || this.apiUrl === 'https://localhost:7001/api') {
-      return this.getMockEmployees(params);
-    }
-    
-    let url = `${this.apiUrl}/Employee/paged`;
+    // Use real backend API
+    let url = `${this.apiUrl}/employee/paged`;
     if (params) {
       const queryParams = new URLSearchParams({
         page: params.page.toString(),
@@ -120,8 +116,8 @@ export class DataService {
         const paginatedData = mockEmployees.slice(startIndex, endIndex);
         
         const response: PaginatedResponse<Employee> = {
-          data: paginatedData,
-          total: mockEmployees.length,
+          items: paginatedData,
+          totalCount: mockEmployees.length,
           page: page,
           pageSize: pageSize,
           totalPages: Math.ceil(mockEmployees.length / pageSize)
@@ -135,15 +131,15 @@ export class DataService {
   }
 
   addEmployee(employee: Omit<Employee, 'employee_Id'>): Observable<Employee> {
-    return this.http.post<Employee>(`${this.apiUrl}/employees`, employee);
+    return this.http.post<Employee>(`${this.apiUrl}/Employee`, employee);
   }
 
   updateEmployee(employee: Employee): Observable<Employee> {
-    return this.http.put<Employee>(`${this.apiUrl}/employees/${employee.employee_Id}`, employee);
+    return this.http.put<Employee>(`${this.apiUrl}/Employee/${employee.employee_Id}`, employee);
   }
 
   deleteEmployee(id: number): Observable<{}> {
-    return this.http.delete(`${this.apiUrl}/employees/${id}`);
+    return this.http.delete(`${this.apiUrl}/Employee/${id}`);
   }
 
  // BudgetCategory CRUD
