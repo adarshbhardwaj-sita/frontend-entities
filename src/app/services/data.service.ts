@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface Employee {
-  employee_Id: number;
+  employee_Id: number; // Required - always available
   name: string;
   email: string;
   department: string;
@@ -130,7 +130,7 @@ export class DataService {
     });
   }
 
-  addEmployee(employee: Omit<Employee, 'employee_Id'>): Observable<Employee> {
+  addEmployee(employee: Employee): Observable<Employee> {
     return this.http.post<Employee>(`${this.apiUrl}/Employee`, employee);
   }
 

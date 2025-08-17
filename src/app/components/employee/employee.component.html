@@ -1,4 +1,26 @@
 <div class="page-container">
+  <!-- Notification Component -->
+  <div class="notification-container" *ngIf="showNotification">
+    <div class="notification" [class]="'notification-' + notificationType">
+      <div class="notification-content">
+        <span class="notification-icon">
+          <i
+            *ngIf="notificationType === 'success'"
+            class="fas fa-check-circle"
+          ></i>
+          <i
+            *ngIf="notificationType === 'error'"
+            class="fas fa-exclamation-circle"
+          ></i>
+        </span>
+        <span class="notification-message">{{ notificationMessage }}</span>
+      </div>
+      <button class="notification-close" (click)="closeNotification()">
+        ×
+      </button>
+    </div>
+  </div>
+
   <header class="page-header">
     <nav class="breadcrumb">
       <span (click)="goHome()" class="breadcrumb-link">Home</span>
@@ -142,22 +164,6 @@
           <i class="fas fa-angle-double-right"></i>
         </button>
       </div>
-
-      <div class="page-size-control">
-        <label for="pageSize">Show:</label>
-        <select
-          id="pageSize"
-          [value]="pageSize"
-          (change)="onPageSizeChange($event)"
-          class="form-control"
-        >
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="20">20</option>
-          <option value="50">50</option>
-        </select>
-        <span>per page</span>
-      </div>
     </div>
   </div>
 
@@ -169,6 +175,19 @@
         <button class="modal-close" (click)="closeModal()">×</button>
       </div>
       <form (ngSubmit)="saveEmployee()" #employeeForm="ngForm">
+        <div class="form-group">
+          <label for="employee_Id">ID</label>
+          <input
+            type="number"
+            id="employee_Id"
+            [(ngModel)]="currentEmployee.employee_Id"
+            name="employee_Id"
+            required
+            [readonly]="isEditing"
+            class="form-control"
+            [class.readonly]="isEditing"
+          />
+        </div>
         <div class="form-group">
           <label for="name">Name</label>
           <input
@@ -182,14 +201,62 @@
         </div>
         <div class="form-group">
           <label for="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            [(ngModel)]="currentEmployee.email"
-            name="email"
-            required
-            class="form-control"
-          />
+          <div class="input-wrapper">
+            <input
+              type="email"
+              id="email"
+              [(ngModel)]="currentEmployee.email"
+              name="email"
+              required
+              class="form-control"
+              [class.invalid]="
+                employeeForm.submitted &&
+                (employeeForm.form.get('email')?.invalid ||
+                  (currentEmployee.email &&
+                    !isValidEmail(currentEmployee.email)))
+              "
+              [class.valid]="
+                currentEmployee.email && isValidEmail(currentEmployee.email)
+              "
+              (blur)="validateEmailField()"
+              (input)="onEmailInput()"
+              placeholder="Enter valid email address"
+            />
+            <span class="validation-icon" *ngIf="currentEmployee.email">
+              <i
+                *ngIf="isValidEmail(currentEmployee.email)"
+                class="fas fa-check-circle valid-icon"
+              ></i>
+              <i
+                *ngIf="!isValidEmail(currentEmployee.email)"
+                class="fas fa-exclamation-circle invalid-icon"
+              ></i>
+            </span>
+          </div>
+          <div
+            class="error-message"
+            *ngIf="employeeForm.submitted && employeeForm.form.get('email')?.errors?.['required']"
+          >
+            Email is required
+          </div>
+          <div
+            class="error-message"
+            *ngIf="
+              employeeForm.submitted &&
+              currentEmployee.email &&
+              !isValidEmail(currentEmployee.email)
+            "
+          >
+            Please enter a valid email address
+          </div>
+          <div
+            class="help-text"
+            *ngIf="
+              currentEmployee.email && !isValidEmail(currentEmployee.email)
+            "
+          >
+            Email should be in format: example@domain.com
+          </div>
         </div>
         <div class="form-group">
           <label for="department">Department</label>
