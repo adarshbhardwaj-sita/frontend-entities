@@ -47,17 +47,45 @@ export class GradeComponent implements OnInit {
   }
 
   saveGrade() {
-    if (this.isEditing && this.currentGrade.id) {
-      this.dataService.updateGrade(this.currentGrade as Grade);
-    } else {
-      this.dataService.addGrade(this.currentGrade as Omit<Grade, 'id'>);
-    }
-    this.closeModal();
+      if (this.isEditing && this.currentGrade.id) {
+        this.dataService.updateGrade(this.currentGrade as Grade).subscribe({
+          next: () => {
+            this.dataService.getGrades().subscribe(grades => {
+              this.grades = grades;
+            });
+            this.closeModal();
+          },
+          error: (error: Error) => {
+            console.error('Error updating grade:', error);
+          }
+        });
+      } else {
+        this.dataService.addGrade(this.currentGrade as Omit<Grade, 'id'>).subscribe({
+          next: () => {
+            this.dataService.getGrades().subscribe(grades => {
+              this.grades = grades;
+            });
+            this.closeModal();
+          },
+          error: (error: Error) => {
+            console.error('Error adding grade:', error);
+          }
+        });
+      }
   }
 
   deleteGrade(id: number) {
-    if (confirm('Are you sure you want to delete this grade?')) {
-      this.dataService.deleteGrade(id);
-    }
+      if (confirm('Are you sure you want to delete this grade?')) {
+        this.dataService.deleteGrade(id).subscribe({
+          next: () => {
+            this.dataService.getGrades().subscribe(grades => {
+              this.grades = grades;
+            });
+          },
+          error: (error: Error) => {
+            console.error('Error deleting grade:', error);
+          }
+        });
+      }
   }
 }

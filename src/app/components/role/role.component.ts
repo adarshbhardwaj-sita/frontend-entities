@@ -47,17 +47,45 @@ export class RoleComponent implements OnInit {
   }
 
   saveRole() {
-    if (this.isEditing && this.currentRole.id) {
-      this.dataService.updateRole(this.currentRole as Role);
-    } else {
-      this.dataService.addRole(this.currentRole as Omit<Role, 'id'>);
-    }
-    this.closeModal();
+      if (this.isEditing && this.currentRole.id) {
+        this.dataService.updateRole(this.currentRole as Role).subscribe({
+          next: () => {
+            this.dataService.getRoles().subscribe(roles => {
+              this.roles = roles;
+            });
+            this.closeModal();
+          },
+          error: (error: Error) => {
+            console.error('Error updating role:', error);
+          }
+        });
+      } else {
+        this.dataService.addRole(this.currentRole as Omit<Role, 'id'>).subscribe({
+          next: () => {
+            this.dataService.getRoles().subscribe(roles => {
+              this.roles = roles;
+            });
+            this.closeModal();
+          },
+          error: (error: Error) => {
+            console.error('Error adding role:', error);
+          }
+        });
+      }
   }
 
   deleteRole(id: number) {
-    if (confirm('Are you sure you want to delete this role?')) {
-      this.dataService.deleteRole(id);
-    }
+      if (confirm('Are you sure you want to delete this role?')) {
+        this.dataService.deleteRole(id).subscribe({
+          next: () => {
+            this.dataService.getRoles().subscribe(roles => {
+              this.roles = roles;
+            });
+          },
+          error: (error: Error) => {
+            console.error('Error deleting role:', error);
+          }
+        });
+      }
   }
 }

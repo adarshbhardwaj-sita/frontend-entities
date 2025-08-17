@@ -46,6 +46,13 @@
         </tbody>
       </table>
     </div>
+
+    <!-- Pagination Controls -->
+    <div class="pagination-controls">
+      <button (click)="prevPage()" [disabled]="currentPage === 1">Prev</button>
+      <span>Page {{currentPage}} of {{totalPages}}</span>
+      <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+    </div>
   </div>
 
   <!-- Modal -->

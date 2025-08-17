@@ -47,17 +47,45 @@ export class BudgetCategoryComponent implements OnInit {
   }
 
   saveCategory() {
-    if (this.isEditing && this.currentCategory.id) {
-      this.dataService.updateBudgetCategory(this.currentCategory as BudgetCategory);
-    } else {
-      this.dataService.addBudgetCategory(this.currentCategory as Omit<BudgetCategory, 'id'>);
-    }
-    this.closeModal();
+      if (this.isEditing && this.currentCategory.id) {
+        this.dataService.updateBudgetCategory(this.currentCategory as BudgetCategory).subscribe({
+          next: () => {
+            this.dataService.getBudgetCategories().subscribe(categories => {
+              this.budgetCategories = categories;
+            });
+            this.closeModal();
+          },
+          error: (error: Error) => {
+            console.error('Error updating category:', error);
+          }
+        });
+      } else {
+        this.dataService.addBudgetCategory(this.currentCategory as Omit<BudgetCategory, 'id'>).subscribe({
+          next: () => {
+            this.dataService.getBudgetCategories().subscribe(categories => {
+              this.budgetCategories = categories;
+            });
+            this.closeModal();
+          },
+          error: (error: Error) => {
+            console.error('Error adding category:', error);
+          }
+        });
+      }
   }
 
   deleteCategory(id: number) {
-    if (confirm('Are you sure you want to delete this budget category?')) {
-      this.dataService.deleteBudgetCategory(id);
-    }
+      if (confirm('Are you sure you want to delete this budget category?')) {
+        this.dataService.deleteBudgetCategory(id).subscribe({
+          next: () => {
+            this.dataService.getBudgetCategories().subscribe(categories => {
+              this.budgetCategories = categories;
+            });
+          },
+          error: (error: Error) => {
+            console.error('Error deleting category:', error);
+          }
+        });
+      }
   }
 }

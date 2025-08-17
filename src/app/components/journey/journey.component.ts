@@ -47,18 +47,46 @@ export class JourneyComponent implements OnInit {
   }
 
   saveJourney() {
-    if (this.isEditing && this.currentJourney.id) {
-      this.dataService.updateJourney(this.currentJourney as Journey);
-    } else {
-      this.dataService.addJourney(this.currentJourney as Omit<Journey, 'id'>);
-    }
-    this.closeModal();
+      if (this.isEditing && this.currentJourney.id) {
+        this.dataService.updateJourney(this.currentJourney as Journey).subscribe({
+          next: () => {
+            this.dataService.getJourneys().subscribe(journeys => {
+              this.journeys = journeys;
+            });
+            this.closeModal();
+          },
+          error: (error: Error) => {
+            console.error('Error updating journey:', error);
+          }
+        });
+      } else {
+        this.dataService.addJourney(this.currentJourney as Omit<Journey, 'id'>).subscribe({
+          next: () => {
+            this.dataService.getJourneys().subscribe(journeys => {
+              this.journeys = journeys;
+            });
+            this.closeModal();
+          },
+          error: (error: Error) => {
+            console.error('Error adding journey:', error);
+          }
+        });
+      }
   }
 
   deleteJourney(id: number) {
-    if (confirm('Are you sure you want to delete this journey?')) {
-      this.dataService.deleteJourney(id);
-    }
+      if (confirm('Are you sure you want to delete this journey?')) {
+        this.dataService.deleteJourney(id).subscribe({
+          next: () => {
+            this.dataService.getJourneys().subscribe(journeys => {
+              this.journeys = journeys;
+            });
+          },
+          error: (error: Error) => {
+            console.error('Error deleting journey:', error);
+          }
+        });
+      }
   }
 
   getStatusClass(status: string): string {

@@ -47,18 +47,46 @@ export class TechnologiesComponent implements OnInit {
   }
 
   saveTechnology() {
-    if (this.isEditing && this.currentTechnology.id) {
-      this.dataService.updateTechnology(this.currentTechnology as Technology);
-    } else {
-      this.dataService.addTechnology(this.currentTechnology as Omit<Technology, 'id'>);
-    }
-    this.closeModal();
+      if (this.isEditing && this.currentTechnology.id) {
+        this.dataService.updateTechnology(this.currentTechnology as Technology).subscribe({
+          next: () => {
+            this.dataService.getTechnologies().subscribe(technologies => {
+              this.technologies = technologies;
+            });
+            this.closeModal();
+          },
+          error: (error: Error) => {
+            console.error('Error updating technology:', error);
+          }
+        });
+      } else {
+        this.dataService.addTechnology(this.currentTechnology as Omit<Technology, 'id'>).subscribe({
+          next: () => {
+            this.dataService.getTechnologies().subscribe(technologies => {
+              this.technologies = technologies;
+            });
+            this.closeModal();
+          },
+          error: (error: Error) => {
+            console.error('Error adding technology:', error);
+          }
+        });
+      }
   }
 
   deleteTechnology(id: number) {
-    if (confirm('Are you sure you want to delete this technology?')) {
-      this.dataService.deleteTechnology(id);
-    }
+      if (confirm('Are you sure you want to delete this technology?')) {
+        this.dataService.deleteTechnology(id).subscribe({
+          next: () => {
+            this.dataService.getTechnologies().subscribe(technologies => {
+              this.technologies = technologies;
+            });
+          },
+          error: (error: Error) => {
+            console.error('Error deleting technology:', error);
+          }
+        });
+      }
   }
 
   getStackArray(stack: string): string[] {
