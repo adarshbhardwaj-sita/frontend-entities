@@ -71,7 +71,7 @@ export class DataService {
       return this.getMockEmployees(params);
     }
     
-    let url = `${this.apiUrl}/Employee`;
+    let url = `${this.apiUrl}/Employee/paged`;
     if (params) {
       const queryParams = new URLSearchParams({
         page: params.page.toString(),
