@@ -60,7 +60,7 @@ export interface Technology {
   providedIn: 'root'
 })
 export class DataService {
-  private apiUrl = 'https://localhost:7001/api'; // Update with your .NET API URL
+  private apiUrl = 'http://localhost:5145/api';
 
   constructor(private http: HttpClient) { }
 
@@ -71,7 +71,7 @@ export class DataService {
       return this.getMockEmployees(params);
     }
     
-    let url = `${this.apiUrl}/employees`;
+    let url = `${this.apiUrl}/Employee`;
     if (params) {
       const queryParams = new URLSearchParams({
         page: params.page.toString(),
