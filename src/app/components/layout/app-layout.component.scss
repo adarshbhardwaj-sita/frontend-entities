@@ -1,0 +1,90 @@
+.layout {
+	display: grid;
+	/* Animated sidebar width via CSS variable */
+	--sidebar-width: 260px;
+	grid-template-columns: var(--sidebar-width) 1fr;
+	grid-template-rows: 56px 1fr;
+	grid-template-areas:
+		"header header"
+		"sidebar content";
+	height: 100vh;
+	background: #f5f7fb;
+	transition: grid-template-columns .25s ease;
+	overflow: hidden; /* prevent transient whitespace during animation */
+}
+
+.layout.collapsed {
+	--sidebar-width: 72px;
+}
+
+.layout-header {
+	grid-area: header;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 0 16px;
+	background: white;
+	border-bottom: 1px solid #e5e9f2;
+	position: sticky;
+	top: 0;
+	z-index: 1000;
+}
+
+.breadcrumb-toggle {
+	width: 40px;
+	height: 40px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: none;
+	background: transparent;
+	cursor: pointer;
+	border-radius: 8px;
+	transition: background .2s ease;
+}
+
+.breadcrumb-toggle:hover { background: #f0f2f6; }
+
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo img { width: 58px; height: 40px; object-fit: contain; }
+.logo-text { font-weight: 700; letter-spacing: .5px; white-space: nowrap; }
+/* Ensure logo text remains visible in collapsed mode */
+.layout.collapsed .logo-text { display: inline; }
+
+.sidebar {
+	grid-area: sidebar;
+	background: #0f172a;
+	color: white;
+	padding: 12px 8px;
+	border-right: 1px solid rgba(255,255,255,.08);
+	width: var(--sidebar-width);
+	transition: width .25s ease;
+}
+
+.nav { display: flex; flex-direction: column; gap: 6px; }
+
+.nav a {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	color: #cbd5e1;
+	padding: 10px 12px;
+	border-radius: 8px;
+	text-decoration: none;
+	transition: background .2s ease, color .2s ease;
+}
+
+.nav a.active, .nav a:hover { background: rgba(255,255,255,.08); color: #fff; }
+
+.nav i { width: 20px; text-align: center; }
+
+/* Only hide nav labels when collapsed */
+.layout.collapsed .nav span { display: none; }
+
+.content {
+	grid-area: content;
+	overflow: auto;
+	background: transparent;
+}
+
+

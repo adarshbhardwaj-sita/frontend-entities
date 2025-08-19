@@ -1,7 +1,9 @@
-.landing-container {
-  min-height: 100vh;
-  padding: 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+/* Increase logo size on landing page */
+.landing-large-logo {
+  width: 120px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
 }
 
 .header {
@@ -9,6 +11,27 @@
   margin-bottom: 4rem;
   color: white;
 }
+
+.landing-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+#large-logo{
+  width: 120px;
+  height: 53px;
+  margin: 20px 0;
+}
+
+.landing-logo img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.logo-text { font-weight: 700; letter-spacing: .5px; }
 
 .main-title {
   font-size: 3.5rem;
@@ -41,26 +64,24 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
+}
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.5s;
-  }
+.entity-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
 
-  &:hover::before {
-    left: 100%;
-  }
+.entity-card:hover::before { left: 100%; }
 
-  &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
-  }
+.entity-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
 }
 
 .icon-container {
@@ -75,10 +96,10 @@
   font-size: 2rem;
   color: white;
   transition: transform 0.3s ease;
+}
 
-  .entity-card:hover & {
-    transform: scale(1.1) rotate(5deg);
-  }
+.entity-card:hover .icon-container {
+  transform: scale(1.1) rotate(5deg);
 }
 
 .entity-title {
@@ -103,24 +124,15 @@
   opacity: 0;
   transform: translateX(-10px);
   transition: all 0.3s ease;
+}
 
-  .entity-card:hover & {
-    opacity: 1;
-    transform: translateX(0);
-  }
+.entity-card:hover .card-arrow {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 @media (max-width: 768px) {
-  .landing-container {
-    padding: 1rem;
-  }
-
-  .main-title {
-    font-size: 2.5rem;
-  }
-
-  .entities-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
+  .landing-container { padding: 1rem; }
+  .main-title { font-size: 2.5rem; }
+  .entities-grid { grid-template-columns: 1fr; gap: 1.5rem; }
 }

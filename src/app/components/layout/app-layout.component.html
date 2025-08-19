@@ -1,0 +1,45 @@
+<div class="layout" [class.collapsed]="isCollapsed">
+  <header class="layout-header">
+    <button
+      class="breadcrumb-toggle"
+      (click)="toggleSidebar()"
+      aria-label="Toggle sidebar"
+    >
+      <i class="fas fa-bars" aria-hidden="true"></i>
+    </button>
+    <div class="logo" aria-label="Site logo">
+      <img src="https://www.sita.aero/static/images/logo.svg" alt="Logo" />
+      <!-- <span class="logo-text">SITA</span> -->
+    </div>
+  </header>
+
+  <aside class="sidebar">
+    <nav class="nav">
+      <a routerLink="/employee" routerLinkActive="active"
+        ><i class="fas fa-user" aria-hidden="true"></i><span>Employees</span></a
+      >
+      <a routerLink="/budget-category" routerLinkActive="active"
+        ><i class="fas fa-wallet" aria-hidden="true"></i><span>Budget</span></a
+      >
+      <a routerLink="/journey" routerLinkActive="active"
+        ><i class="fas fa-route" aria-hidden="true"></i><span>Journey</span></a
+      >
+      <a routerLink="/grade" routerLinkActive="active"
+        ><i class="fas fa-layer-group" aria-hidden="true"></i
+        ><span>Grades</span></a
+      >
+      <a routerLink="/role" routerLinkActive="active"
+        ><i class="fas fa-briefcase" aria-hidden="true"></i
+        ><span>Roles</span></a
+      >
+      <a routerLink="/technologies" routerLinkActive="active"
+        ><i class="fas fa-laptop-code" aria-hidden="true"></i
+        ><span>Technologies</span></a
+      >
+    </nav>
+  </aside>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

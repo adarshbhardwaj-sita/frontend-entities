@@ -6,14 +6,21 @@ import { JourneyComponent } from './components/journey/journey.component';
 import { GradeComponent } from './components/grade/grade.component';
 import { RoleComponent } from './components/role/role.component';
 import { TechnologiesComponent } from './components/technologies/technologies.component';
+import { AppLayoutComponent } from './components/layout/app-layout.component';
 
 export const routes: Routes = [
-  { path: '', component: LandingComponent },
-  { path: 'employee', component: EmployeeComponent },
-  { path: 'budget-category', component: BudgetCategoryComponent },
-  { path: 'journey', component: JourneyComponent },
-  { path: 'grade', component: GradeComponent },
-  { path: 'role', component: RoleComponent },
-  { path: 'technologies', component: TechnologiesComponent },
-  { path: '**', redirectTo: '' }
+	{ path: '', component: LandingComponent },
+	{
+		path: '',
+		component: AppLayoutComponent,
+		children: [
+			{ path: 'employee', component: EmployeeComponent },
+			{ path: 'budget-category', component: BudgetCategoryComponent },
+			{ path: 'journey', component: JourneyComponent },
+			{ path: 'grade', component: GradeComponent },
+			{ path: 'role', component: RoleComponent },
+			{ path: 'technologies', component: TechnologiesComponent }
+		]
+	},
+	{ path: '**', redirectTo: '' }
 ];
