@@ -144,19 +144,19 @@ export class DataService {
 
   // BudgetCategory CRUD
   getBudgetCategories(): Observable<BudgetCategory[]> {
-    return this.http.get<BudgetCategory[]>(`${this.apiUrl}/budget-categories`);
+    return this.http.get<BudgetCategory[]>(`${this.apiUrl}/BudgetCategory`);
   }
 
   addBudgetCategory(category: Omit<BudgetCategory, 'id'>): Observable<BudgetCategory> {
-    return this.http.post<BudgetCategory>(`${this.apiUrl}/budget-categories`, category);
+    return this.http.post<BudgetCategory>(`${this.apiUrl}/BudgetCategory`, category);
   }
 
   updateBudgetCategory(category: BudgetCategory): Observable<BudgetCategory> {
-    return this.http.put<BudgetCategory>(`${this.apiUrl}/budget-categories/${category.id}`, category);
+    return this.http.put<BudgetCategory>(`${this.apiUrl}/BudgetCategory/${category.id}`, category);
   }
 
   deleteBudgetCategory(id: number): Observable<{}> {
-    return this.http.delete(`${this.apiUrl}/budget-categories/${id}`);
+    return this.http.delete(`${this.apiUrl}/BudgetCategory/${id}`);
   }
 
   // Journey CRUD
