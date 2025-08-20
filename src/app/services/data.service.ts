@@ -31,17 +31,18 @@ export interface BudgetCategory {
 }
 
 export interface Journey {
-  id: number;
-  currentPhase: string;
-  startDate: string;
-  status: string;
+  journeyId: number;
+  journeyName: string;
+  journeyDescription: string;
+  destination: string;
+  durationInDays: number;
+  budget: number;
 }
 
 export interface Grade {
-  id: number;
+  gradeId: number;
   gradeLevel: string;
-  gradeCode: string;
-  gradeEffectiveDate: string;
+  gradeDescription: string;
 }
 
 export interface Role {
@@ -52,7 +53,7 @@ export interface Role {
 
 export interface Technology {
   id: number;
-  stack: string;
+  technologyStack: string;
 }
 
 @Injectable({
@@ -163,12 +164,12 @@ export class DataService {
     return this.http.get<Journey[]>(`${this.apiUrl}/Journey`);
   }
 
-  addJourney(journey: Omit<Journey, 'id'>): Observable<Journey> {
+  addJourney(journey: Omit<Journey, 'journeyId'>): Observable<Journey> {
     return this.http.post<Journey>(`${this.apiUrl}/Journey`, journey);
   }
 
   updateJourney(journey: Journey): Observable<Journey> {
-    return this.http.put<Journey>(`${this.apiUrl}/Journey/${journey.id}`, journey);
+    return this.http.put<Journey>(`${this.apiUrl}/Journey/${journey.journeyId}`, journey);
   }
 
   deleteJourney(id: number): Observable<{}> {
@@ -180,12 +181,12 @@ export class DataService {
     return this.http.get<Grade[]>(`${this.apiUrl}/Grade`);
   }
 
-  addGrade(grade: Omit<Grade, 'id'>): Observable<Grade> {
+  addGrade(grade: Omit<Grade, 'gradeId'>): Observable<Grade> {
     return this.http.post<Grade>(`${this.apiUrl}/Grade`, grade);
   }
 
   updateGrade(grade: Grade): Observable<Grade> {
-    return this.http.put<Grade>(`${this.apiUrl}/Grade/${grade.id}`, grade);
+    return this.http.put<Grade>(`${this.apiUrl}/Grade/${grade.gradeId}`, grade);
   }
 
   deleteGrade(id: number): Observable<{}> {
@@ -211,7 +212,7 @@ export class DataService {
 
   // Technology CRUD
   getTechnologies(): Observable<Technology[]> {
-    return this.http.get<Technology[]>(`${this.apiUrl}/Technology`);
+    return this.http.get<Technology[]>(`${this.apiUrl}/Technologies`);
   }
 
   addTechnology(technology: Omit<Technology, 'id'>): Observable<Technology> {

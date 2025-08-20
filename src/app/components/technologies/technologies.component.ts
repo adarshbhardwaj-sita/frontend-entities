@@ -31,7 +31,10 @@ export class TechnologiesComponent implements OnInit {
 
   openAddModal() {
     this.isEditing = false;
-    this.currentTechnology = {};
+    this.currentTechnology = {
+      id: 0,
+      technologyStack: ''
+    } as Partial<Technology>;
     this.showModal = true;
   }
 
@@ -43,7 +46,10 @@ export class TechnologiesComponent implements OnInit {
 
   closeModal() {
     this.showModal = false;
-    this.currentTechnology = {};
+    this.currentTechnology = {
+      id: 0,
+      technologyStack: ''
+    } as Partial<Technology>;
   }
 
   saveTechnology() {

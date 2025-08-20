@@ -25,7 +25,6 @@
           <tr>
             <th>ID</th>
             <th>Technology Stack</th>
-            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -34,28 +33,12 @@
             <td>
               <div class="stack-container">
                 <span
-                  *ngFor="let tech of getStackArray(technology.stack)"
+                  *ngFor="let tech of getStackArray(technology.technologyStack)"
                   class="tech-badge"
                 >
                   {{ tech }}
                 </span>
               </div>
-            </td>
-            <td class="actions">
-              <button
-                class="btn-icon btn-edit"
-                (click)="editTechnology(technology)"
-                title="Edit"
-              >
-                <i class="fas fa-edit"></i>
-              </button>
-              <button
-                class="btn-icon btn-delete"
-                (click)="deleteTechnology(technology.id)"
-                title="Delete"
-              >
-                <i class="fas fa-trash"></i>
-              </button>
             </td>
           </tr>
         </tbody>
@@ -84,11 +67,11 @@
           />
         </div>
         <div class="form-group">
-          <label for="stack">Technology Stack</label>
+          <label for="technologyStack">Technology Stack</label>
           <textarea
-            id="stack"
-            [(ngModel)]="currentTechnology.stack"
-            name="stack"
+            id="technologyStack"
+            [(ngModel)]="currentTechnology.technologyStack"
+            name="technologyStack"
             required
             class="form-control"
             rows="3"

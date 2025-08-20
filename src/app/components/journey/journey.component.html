@@ -24,41 +24,21 @@
         <thead>
           <tr>
             <th>ID</th>
-            <th>Current Phase</th>
-            <th>Start Date</th>
-            <th>Status</th>
-            <th>Actions</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Destination</th>
+            <th>Duration (days)</th>
+            <th>Budget</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let journey of journeys">
-            <td>{{ journey.id }}</td>
-            <td>{{ journey.currentPhase }}</td>
-            <td>{{ journey.startDate | date }}</td>
-            <td>
-              <span
-                class="status-badge"
-                [ngClass]="getStatusClass(journey.status)"
-              >
-                {{ journey.status }}
-              </span>
-            </td>
-            <td class="actions">
-              <button
-                class="btn-icon btn-edit"
-                (click)="editJourney(journey)"
-                title="Edit"
-              >
-                <i class="fas fa-edit"></i>
-              </button>
-              <button
-                class="btn-icon btn-delete"
-                (click)="deleteJourney(journey.id)"
-                title="Delete"
-              >
-                <i class="fas fa-trash"></i>
-              </button>
-            </td>
+            <td>{{ journey.journeyId }}</td>
+            <td>{{ journey.journeyName }}</td>
+            <td>{{ journey.journeyDescription }}</td>
+            <td>{{ journey.destination }}</td>
+            <td>{{ journey.durationInDays }}</td>
+            <td>{{ journey.budget | number }}</td>
           </tr>
         </tbody>
       </table>
@@ -74,54 +54,71 @@
       </div>
       <form (ngSubmit)="saveJourney()" #journeyForm="ngForm">
         <div class="form-group">
-          <label for="id">ID</label>
+          <label for="journeyId">ID</label>
           <input
             type="number"
-            id="id"
-            [(ngModel)]="currentJourney.id"
-            name="id"
+            id="journeyId"
+            [(ngModel)]="currentJourney.journeyId"
+            name="journeyId"
             required
             class="form-control"
             placeholder="Enter journey ID"
           />
         </div>
         <div class="form-group">
-          <label for="currentPhase">Current Phase</label>
+          <label for="journeyName">Name</label>
           <input
             type="text"
-            id="currentPhase"
-            [(ngModel)]="currentJourney.currentPhase"
-            name="currentPhase"
+            id="journeyName"
+            [(ngModel)]="currentJourney.journeyName"
+            name="journeyName"
             required
             class="form-control"
           />
         </div>
         <div class="form-group">
-          <label for="startDate">Start Date</label>
+          <label for="journeyDescription">Description</label>
+          <textarea
+            id="journeyDescription"
+            [(ngModel)]="currentJourney.journeyDescription"
+            name="journeyDescription"
+            required
+            class="form-control"
+            rows="2"
+          ></textarea>
+        </div>
+        <div class="form-group">
+          <label for="destination">Destination</label>
           <input
-            type="date"
-            id="startDate"
-            [(ngModel)]="currentJourney.startDate"
-            name="startDate"
+            type="text"
+            id="destination"
+            [(ngModel)]="currentJourney.destination"
+            name="destination"
             required
             class="form-control"
           />
         </div>
         <div class="form-group">
-          <label for="status">Status</label>
-          <select
-            id="status"
-            [(ngModel)]="currentJourney.status"
-            name="status"
+          <label for="durationInDays">Duration (days)</label>
+          <input
+            type="number"
+            id="durationInDays"
+            [(ngModel)]="currentJourney.durationInDays"
+            name="durationInDays"
             required
             class="form-control"
-          >
-            <option value="">Select Status</option>
-            <option value="Active">Active</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Completed">Completed</option>
-            <option value="On Hold">On Hold</option>
-          </select>
+          />
+        </div>
+        <div class="form-group">
+          <label for="budget">Budget</label>
+          <input
+            type="number"
+            id="budget"
+            [(ngModel)]="currentJourney.budget"
+            name="budget"
+            required
+            class="form-control"
+          />
         </div>
         <div class="modal-actions">
           <button

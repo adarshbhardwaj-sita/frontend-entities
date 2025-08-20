@@ -31,7 +31,14 @@ export class JourneyComponent implements OnInit {
 
   openAddModal() {
     this.isEditing = false;
-    this.currentJourney = {};
+    this.currentJourney = {
+      journeyId: 0,
+      journeyName: '',
+      journeyDescription: '',
+      destination: '',
+      durationInDays: 0,
+      budget: 0
+    } as Partial<Journey>;
     this.showModal = true;
   }
 
@@ -43,11 +50,18 @@ export class JourneyComponent implements OnInit {
 
   closeModal() {
     this.showModal = false;
-    this.currentJourney = {};
+    this.currentJourney = {
+      journeyId: 0,
+      journeyName: '',
+      journeyDescription: '',
+      destination: '',
+      durationInDays: 0,
+      budget: 0
+    } as Partial<Journey>;
   }
 
   saveJourney() {
-      if (this.isEditing && this.currentJourney.id) {
+      if (this.isEditing && this.currentJourney.journeyId) {
         this.dataService.updateJourney(this.currentJourney as Journey).subscribe({
           next: () => {
             this.dataService.getJourneys().subscribe(journeys => {
@@ -60,7 +74,7 @@ export class JourneyComponent implements OnInit {
           }
         });
       } else {
-        this.dataService.addJourney(this.currentJourney as Omit<Journey, 'id'>).subscribe({
+        this.dataService.addJourney(this.currentJourney as Omit<Journey, 'journeyId'>).subscribe({
           next: () => {
             this.dataService.getJourneys().subscribe(journeys => {
               this.journeys = journeys;

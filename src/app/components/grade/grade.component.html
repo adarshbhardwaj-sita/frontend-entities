@@ -25,35 +25,14 @@
           <tr>
             <th>ID</th>
             <th>Grade Level</th>
-            <th>Grade Code</th>
-            <th>Grade Effective Date</th>
-            <th>Actions</th>
+            <th>Description</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let grade of grades">
-            <td>{{ grade.id }}</td>
+            <td>{{ grade.gradeId }}</td>
             <td>{{ grade.gradeLevel }}</td>
-            <td>
-              <span class="grade-code">{{ grade.gradeCode }}</span>
-            </td>
-            <td>{{ grade.gradeEffectiveDate | date }}</td>
-            <td class="actions">
-              <button
-                class="btn-icon btn-edit"
-                (click)="editGrade(grade)"
-                title="Edit"
-              >
-                <i class="fas fa-edit"></i>
-              </button>
-              <button
-                class="btn-icon btn-delete"
-                (click)="deleteGrade(grade.id)"
-                title="Delete"
-              >
-                <i class="fas fa-trash"></i>
-              </button>
-            </td>
+            <td>{{ grade.gradeDescription }}</td>
           </tr>
         </tbody>
       </table>
@@ -69,12 +48,12 @@
       </div>
       <form (ngSubmit)="saveGrade()" #gradeForm="ngForm">
         <div class="form-group">
-          <label for="id">ID</label>
+          <label for="gradeId">ID</label>
           <input
             type="number"
-            id="id"
-            [(ngModel)]="currentGrade.id"
-            name="id"
+            id="gradeId"
+            [(ngModel)]="currentGrade.gradeId"
+            name="gradeId"
             required
             class="form-control"
             placeholder="Enter grade ID"
@@ -92,27 +71,15 @@
           />
         </div>
         <div class="form-group">
-          <label for="gradeCode">Grade Code</label>
-          <input
-            type="text"
-            id="gradeCode"
-            [(ngModel)]="currentGrade.gradeCode"
-            name="gradeCode"
+          <label for="gradeDescription">Description</label>
+          <textarea
+            id="gradeDescription"
+            [(ngModel)]="currentGrade.gradeDescription"
+            name="gradeDescription"
             required
             class="form-control"
-            placeholder="e.g., JR01, SR01"
-          />
-        </div>
-        <div class="form-group">
-          <label for="gradeEffectiveDate">Grade Effective Date</label>
-          <input
-            type="date"
-            id="gradeEffectiveDate"
-            [(ngModel)]="currentGrade.gradeEffectiveDate"
-            name="gradeEffectiveDate"
-            required
-            class="form-control"
-          />
+            rows="2"
+          ></textarea>
         </div>
         <div class="modal-actions">
           <button

@@ -31,7 +31,11 @@ export class GradeComponent implements OnInit {
 
   openAddModal() {
     this.isEditing = false;
-    this.currentGrade = {};
+    this.currentGrade = {
+      gradeId: 0,
+      gradeLevel: '',
+      gradeDescription: ''
+    } as Partial<Grade>;
     this.showModal = true;
   }
 
@@ -43,11 +47,15 @@ export class GradeComponent implements OnInit {
 
   closeModal() {
     this.showModal = false;
-    this.currentGrade = {};
+    this.currentGrade = {
+      gradeId: 0,
+      gradeLevel: '',
+      gradeDescription: ''
+    } as Partial<Grade>;
   }
 
   saveGrade() {
-      if (this.isEditing && this.currentGrade.id) {
+      if (this.isEditing && this.currentGrade.gradeId) {
         this.dataService.updateGrade(this.currentGrade as Grade).subscribe({
           next: () => {
             this.dataService.getGrades().subscribe(grades => {
@@ -60,7 +68,7 @@ export class GradeComponent implements OnInit {
           }
         });
       } else {
-        this.dataService.addGrade(this.currentGrade as Omit<Grade, 'id'>).subscribe({
+        this.dataService.addGrade(this.currentGrade as Omit<Grade, 'gradeId'>).subscribe({
           next: () => {
             this.dataService.getGrades().subscribe(grades => {
               this.grades = grades;
