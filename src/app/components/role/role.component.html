@@ -86,8 +86,23 @@
             [(ngModel)]="currentRole.role_Title"
             name="role_Title"
             required
+            minlength="3"
+            maxlength="50"
             class="form-control"
+            #roleTitleRef="ngModel"
           />
+          <div
+            class="error-message"
+            *ngIf="roleForm.submitted && roleTitleRef.errors?.['required']"
+          >
+            Role title is required
+          </div>
+          <div
+            class="error-message"
+            *ngIf="roleForm.submitted && (roleTitleRef.errors?.['minlength'] || roleTitleRef.errors?.['maxlength'])"
+          >
+            Role title must be between 3 and 50 characters.
+          </div>
         </div>
         <div class="form-group">
           <label for="project_Name">Project Name</label>
@@ -97,8 +112,22 @@
             [(ngModel)]="currentRole.project_Name"
             name="project_Name"
             required
+            minlength="3"
             class="form-control"
+            #projectNameRef="ngModel"
           />
+          <div
+            class="error-message"
+            *ngIf="roleForm.submitted && projectNameRef.errors?.['required']"
+          >
+            Project name is required
+          </div>
+          <div
+            class="error-message"
+            *ngIf="roleForm.submitted && projectNameRef.errors?.['minlength']"
+          >
+            Project name must be at least 3 characters.
+          </div>
         </div>
         <div class="modal-actions">
           <button

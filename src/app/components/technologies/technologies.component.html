@@ -90,11 +90,25 @@
             [(ngModel)]="currentTechnology.technologyStack"
             name="technologyStack"
             required
+            minlength="3"
             class="form-control"
             rows="3"
             placeholder="e.g., Angular, TypeScript, RxJS"
+            #technologyStackRef="ngModel"
           ></textarea>
           <small class="form-help">Separate technologies with commas</small>
+          <div
+            class="error-message"
+            *ngIf="technologyForm.submitted && technologyStackRef.errors?.['required']"
+          >
+            Project name is required
+          </div>
+          <div
+            class="error-message"
+            *ngIf="technologyForm.submitted && technologyStackRef.errors?.['minlength']"
+          >
+            Project name must be at least 3 characters.
+          </div>
         </div>
         <div class="modal-actions">
           <button
