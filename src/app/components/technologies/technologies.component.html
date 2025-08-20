@@ -25,6 +25,7 @@
           <tr>
             <th>ID</th>
             <th>Technology Stack</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -39,6 +40,22 @@
                   {{ tech }}
                 </span>
               </div>
+            </td>
+            <td class="actions">
+              <button
+                class="btn-icon btn-edit"
+                (click)="editTechnology(technology)"
+                title="Edit"
+              >
+                <i class="fas fa-edit"></i>
+              </button>
+              <button
+                class="btn-icon btn-delete"
+                (click)="deleteTechnology(technology.id)"
+                title="Delete"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
             </td>
           </tr>
         </tbody>

@@ -26,6 +26,7 @@
             <th>ID</th>
             <th>Grade Level</th>
             <th>Description</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -33,6 +34,22 @@
             <td>{{ grade.gradeId }}</td>
             <td>{{ grade.gradeLevel }}</td>
             <td>{{ grade.gradeDescription }}</td>
+            <td class="actions">
+              <button
+                class="btn-icon btn-edit"
+                (click)="editGrade(grade)"
+                title="Edit"
+              >
+                <i class="fas fa-edit"></i>
+              </button>
+              <button
+                class="btn-icon btn-delete"
+                (click)="deleteGrade(grade.gradeId)"
+                title="Delete"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>

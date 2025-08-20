@@ -29,6 +29,7 @@
             <th>Destination</th>
             <th>Duration (days)</th>
             <th>Budget</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -39,6 +40,22 @@
             <td>{{ journey.destination }}</td>
             <td>{{ journey.durationInDays }}</td>
             <td>{{ journey.budget | number }}</td>
+            <td class="actions">
+              <button
+                class="btn-icon btn-edit"
+                (click)="editJourney(journey)"
+                title="Edit"
+              >
+                <i class="fas fa-edit"></i>
+              </button>
+              <button
+                class="btn-icon btn-delete"
+                (click)="deleteJourney(journey.journeyId)"
+                title="Delete"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
