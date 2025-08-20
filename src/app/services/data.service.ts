@@ -216,14 +216,14 @@ export class DataService {
   }
 
   addTechnology(technology: Omit<Technology, 'id'>): Observable<Technology> {
-    return this.http.post<Technology>(`${this.apiUrl}/Technology`, technology);
+    return this.http.post<Technology>(`${this.apiUrl}/Technologies`, technology);
   }
 
   updateTechnology(technology: Technology): Observable<Technology> {
-    return this.http.put<Technology>(`${this.apiUrl}/Technology/${technology.id}`, technology);
+    return this.http.put<Technology>(`${this.apiUrl}/Technologies/${technology.id}`, technology);
   }
 
   deleteTechnology(id: number): Observable<{}> {
-    return this.http.delete(`${this.apiUrl}/Technology/${id}`);
+    return this.http.delete(`${this.apiUrl}/Technologies/${id}`);
   }
 }
