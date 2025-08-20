@@ -45,10 +45,9 @@ export interface Grade {
 }
 
 export interface Role {
-  id: number;
-  roleTitle: string;
-  reportingManager: string;
-  projectAssigned: string;
+  role_Id: number;
+  role_Title: string;
+  project_Name: string;
 }
 
 export interface Technology {
@@ -161,69 +160,69 @@ export class DataService {
 
   // Journey CRUD
   getJourneys(): Observable<Journey[]> {
-    return this.http.get<Journey[]>(`${this.apiUrl}/journeys`);
+    return this.http.get<Journey[]>(`${this.apiUrl}/Journey`);
   }
 
   addJourney(journey: Omit<Journey, 'id'>): Observable<Journey> {
-    return this.http.post<Journey>(`${this.apiUrl}/journeys`, journey);
+    return this.http.post<Journey>(`${this.apiUrl}/Journey`, journey);
   }
 
   updateJourney(journey: Journey): Observable<Journey> {
-    return this.http.put<Journey>(`${this.apiUrl}/journeys/${journey.id}`, journey);
+    return this.http.put<Journey>(`${this.apiUrl}/Journey/${journey.id}`, journey);
   }
 
   deleteJourney(id: number): Observable<{}> {
-    return this.http.delete(`${this.apiUrl}/journeys/${id}`);
+    return this.http.delete(`${this.apiUrl}/Journey/${id}`);
   }
 
   // Grade CRUD
   getGrades(): Observable<Grade[]> {
-    return this.http.get<Grade[]>(`${this.apiUrl}/grades`);
+    return this.http.get<Grade[]>(`${this.apiUrl}/Grade`);
   }
 
   addGrade(grade: Omit<Grade, 'id'>): Observable<Grade> {
-    return this.http.post<Grade>(`${this.apiUrl}/grades`, grade);
+    return this.http.post<Grade>(`${this.apiUrl}/Grade`, grade);
   }
 
   updateGrade(grade: Grade): Observable<Grade> {
-    return this.http.put<Grade>(`${this.apiUrl}/grades/${grade.id}`, grade);
+    return this.http.put<Grade>(`${this.apiUrl}/Grade/${grade.id}`, grade);
   }
 
   deleteGrade(id: number): Observable<{}> {
-    return this.http.delete(`${this.apiUrl}/grades/${id}`);
+    return this.http.delete(`${this.apiUrl}/Grade/${id}`);
   }
 
   // Role CRUD
   getRoles(): Observable<Role[]> {
-    return this.http.get<Role[]>(`${this.apiUrl}/roles`);
+    return this.http.get<Role[]>(`${this.apiUrl}/Role`);
   }
 
-  addRole(role: Omit<Role, 'id'>): Observable<Role> {
-    return this.http.post<Role>(`${this.apiUrl}/roles`, role);
+  addRole(role: Omit<Role, 'role_Id'>): Observable<Role> {
+    return this.http.post<Role>(`${this.apiUrl}/Role`, role);
   }
 
   updateRole(role: Role): Observable<Role> {
-    return this.http.put<Role>(`${this.apiUrl}/roles/${role.id}`, role);
+    return this.http.put<Role>(`${this.apiUrl}/Role/${role.role_Id}`, role);
   }
 
   deleteRole(id: number): Observable<{}> {
-    return this.http.delete(`${this.apiUrl}/roles/${id}`);
+    return this.http.delete(`${this.apiUrl}/Role/${id}`);
   }
 
   // Technology CRUD
   getTechnologies(): Observable<Technology[]> {
-    return this.http.get<Technology[]>(`${this.apiUrl}/technologies`);
+    return this.http.get<Technology[]>(`${this.apiUrl}/Technology`);
   }
 
   addTechnology(technology: Omit<Technology, 'id'>): Observable<Technology> {
-    return this.http.post<Technology>(`${this.apiUrl}/technologies`, technology);
+    return this.http.post<Technology>(`${this.apiUrl}/Technology`, technology);
   }
 
   updateTechnology(technology: Technology): Observable<Technology> {
-    return this.http.put<Technology>(`${this.apiUrl}/technologies/${technology.id}`, technology);
+    return this.http.put<Technology>(`${this.apiUrl}/Technology/${technology.id}`, technology);
   }
 
   deleteTechnology(id: number): Observable<{}> {
-    return this.http.delete(`${this.apiUrl}/technologies/${id}`);
+    return this.http.delete(`${this.apiUrl}/Technology/${id}`);
   }
 }

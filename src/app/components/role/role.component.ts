@@ -31,7 +31,11 @@ export class RoleComponent implements OnInit {
 
   openAddModal() {
     this.isEditing = false;
-    this.currentRole = {};
+    this.currentRole = {
+      role_Id: 0,
+      role_Title: '',
+      project_Name: ''
+    };
     this.showModal = true;
   }
 
@@ -43,11 +47,15 @@ export class RoleComponent implements OnInit {
 
   closeModal() {
     this.showModal = false;
-    this.currentRole = {};
+    this.currentRole = {
+      role_Id: 0,
+      role_Title: '',
+      project_Name: ''
+    };
   }
 
   saveRole() {
-      if (this.isEditing && this.currentRole.id) {
+      if (this.isEditing && this.currentRole.role_Id) {
         this.dataService.updateRole(this.currentRole as Role).subscribe({
           next: () => {
             this.dataService.getRoles().subscribe(roles => {
@@ -60,7 +68,7 @@ export class RoleComponent implements OnInit {
           }
         });
       } else {
-        this.dataService.addRole(this.currentRole as Omit<Role, 'id'>).subscribe({
+        this.dataService.addRole(this.currentRole as Omit<Role, 'role_Id'>).subscribe({
           next: () => {
             this.dataService.getRoles().subscribe(roles => {
               this.roles = roles;

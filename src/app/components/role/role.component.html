@@ -25,18 +25,16 @@
           <tr>
             <th>ID</th>
             <th>Role Title</th>
-            <th>Reporting Manager</th>
-            <th>Project Assigned</th>
+            <th>Project Name</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let role of roles">
-            <td>{{ role.id }}</td>
-            <td>{{ role.roleTitle }}</td>
-            <td>{{ role.reportingManager }}</td>
+            <td>{{ role.role_Id }}</td>
+            <td>{{ role.role_Title }}</td>
             <td>
-              <span class="project-badge">{{ role.projectAssigned }}</span>
+              <span class="project-badge">{{ role.project_Name }}</span>
             </td>
             <td class="actions">
               <button
@@ -48,7 +46,7 @@
               </button>
               <button
                 class="btn-icon btn-delete"
-                (click)="deleteRole(role.id)"
+                (click)="deleteRole(role.role_Id)"
                 title="Delete"
               >
                 <i class="fas fa-trash"></i>
@@ -69,46 +67,35 @@
       </div>
       <form (ngSubmit)="saveRole()" #roleForm="ngForm">
         <div class="form-group">
-          <label for="id">ID</label>
+          <label for="role_Id">ID</label>
           <input
             type="number"
-            id="id"
-            [(ngModel)]="currentRole.id"
-            name="id"
+            id="role_Id"
+            [(ngModel)]="currentRole.role_Id"
+            name="role_Id"
             required
             class="form-control"
             placeholder="Enter role ID"
           />
         </div>
         <div class="form-group">
-          <label for="roleTitle">Role Title</label>
+          <label for="role_Title">Role Title</label>
           <input
             type="text"
-            id="roleTitle"
-            [(ngModel)]="currentRole.roleTitle"
-            name="roleTitle"
+            id="role_Title"
+            [(ngModel)]="currentRole.role_Title"
+            name="role_Title"
             required
             class="form-control"
           />
         </div>
         <div class="form-group">
-          <label for="reportingManager">Reporting Manager</label>
+          <label for="project_Name">Project Name</label>
           <input
             type="text"
-            id="reportingManager"
-            [(ngModel)]="currentRole.reportingManager"
-            name="reportingManager"
-            required
-            class="form-control"
-          />
-        </div>
-        <div class="form-group">
-          <label for="projectAssigned">Project Assigned</label>
-          <input
-            type="text"
-            id="projectAssigned"
-            [(ngModel)]="currentRole.projectAssigned"
-            name="projectAssigned"
+            id="project_Name"
+            [(ngModel)]="currentRole.project_Name"
+            name="project_Name"
             required
             class="form-control"
           />
