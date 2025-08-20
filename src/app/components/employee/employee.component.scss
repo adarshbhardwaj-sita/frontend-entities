@@ -412,18 +412,6 @@
   }
 }
 
-// Form control readonly styles
-.form-control.readonly {
-  background-color: #f8f9fa;
-  color: #6c757d;
-  cursor: not-allowed;
-  
-  &:focus {
-    border-color: #ced4da;
-    box-shadow: none;
-  }
-}
-
 // Required field indicator
 .form-group label[for="employee_Id"]::after {
   content: " *";

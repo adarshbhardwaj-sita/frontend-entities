@@ -6,7 +6,9 @@
       <span class="breadcrumb-current">Journey Management</span>
     </nav>
     <h1 class="page-title">Career Journey</h1>
-    <p class="page-description">Guide professional development and growth paths</p>
+    <p class="page-description">
+      Guide professional development and growth paths
+    </p>
   </header>
 
   <div class="table-container">
@@ -34,15 +36,26 @@
             <td>{{ journey.currentPhase }}</td>
             <td>{{ journey.startDate | date }}</td>
             <td>
-              <span class="status-badge" [ngClass]="getStatusClass(journey.status)">
+              <span
+                class="status-badge"
+                [ngClass]="getStatusClass(journey.status)"
+              >
                 {{ journey.status }}
               </span>
             </td>
             <td class="actions">
-              <button class="btn-icon btn-edit" (click)="editJourney(journey)" title="Edit">
+              <button
+                class="btn-icon btn-edit"
+                (click)="editJourney(journey)"
+                title="Edit"
+              >
                 <i class="fas fa-edit"></i>
               </button>
-              <button class="btn-icon btn-delete" (click)="deleteJourney(journey.id)" title="Delete">
+              <button
+                class="btn-icon btn-delete"
+                (click)="deleteJourney(journey.id)"
+                title="Delete"
+              >
                 <i class="fas fa-trash"></i>
               </button>
             </td>
@@ -56,10 +69,22 @@
   <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
     <div class="modal" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <h3>{{ isEditing ? 'Edit Journey' : 'Add Journey' }}</h3>
+        <h3>{{ isEditing ? "Edit Journey" : "Add Journey" }}</h3>
         <button class="modal-close" (click)="closeModal()">×</button>
       </div>
       <form (ngSubmit)="saveJourney()" #journeyForm="ngForm">
+        <div class="form-group">
+          <label for="id">ID</label>
+          <input
+            type="number"
+            id="id"
+            [(ngModel)]="currentJourney.id"
+            name="id"
+            required
+            class="form-control"
+            placeholder="Enter journey ID"
+          />
+        </div>
         <div class="form-group">
           <label for="currentPhase">Current Phase</label>
           <input
@@ -69,7 +94,7 @@
             name="currentPhase"
             required
             class="form-control"
-          >
+          />
         </div>
         <div class="form-group">
           <label for="startDate">Start Date</label>
@@ -80,7 +105,7 @@
             name="startDate"
             required
             class="form-control"
-          >
+          />
         </div>
         <div class="form-group">
           <label for="status">Status</label>
@@ -99,9 +124,19 @@
           </select>
         </div>
         <div class="modal-actions">
-          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary" [disabled]="!journeyForm.form.valid">
-            {{ isEditing ? 'Update' : 'Add' }}
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="closeModal()"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="!journeyForm.form.valid"
+          >
+            {{ isEditing ? "Update" : "Add" }}
           </button>
         </div>
       </form>

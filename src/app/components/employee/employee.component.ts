@@ -123,7 +123,7 @@ export class EmployeeComponent implements OnInit {
   openAddModal() {
     this.isEditing = false;
     this.currentEmployee = {
-      employee_Id: 0, // Will be filled by user
+      employee_Id: 0, // Changed back to 0 for new entries
       name: '',
       email: '',
       department: '',
