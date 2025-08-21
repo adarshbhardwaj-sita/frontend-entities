@@ -27,7 +27,7 @@ export interface BudgetCategory {
   id: number;
   categoryType: string;
   budgetAmount: number;
-  financialYear: string;
+  financialYear: number; // Changed from string to number (e.g., 2025)
 }
 
 export interface Journey {

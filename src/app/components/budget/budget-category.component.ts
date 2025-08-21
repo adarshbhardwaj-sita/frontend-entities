@@ -41,7 +41,7 @@ export class BudgetCategoryComponent implements OnInit {
       id: 0,
       categoryType: '',
       budgetAmount: 0,
-      financialYear: ''
+      financialYear: 0
     };
     this.showModal = true;
   }
@@ -60,7 +60,7 @@ export class BudgetCategoryComponent implements OnInit {
       id: 0,
       categoryType: '',
       budgetAmount: 0,
-      financialYear: ''
+      financialYear: 0
     };
   }
 
@@ -80,10 +80,16 @@ export class BudgetCategoryComponent implements OnInit {
       alert('Please enter a valid budget amount greater than 0');
       return;
     }
-    if (!this.currentCategory.financialYear || !this.currentCategory.financialYear.match(/^\d{4}-\d{2}$/)) {
-      alert('Please enter a valid financial year in format YYYY-YY (e.g., 2024-25)');
-      return;
-    }
+        if (
+          !this.currentCategory.financialYear ||
+          typeof this.currentCategory.financialYear !== 'number' ||
+          this.currentCategory.financialYear < 1900 ||
+          this.currentCategory.financialYear > 2100 ||
+          !Number.isInteger(this.currentCategory.financialYear)
+        ) {
+          alert('Please enter a valid financial year as a 4-digit number (e.g., 2025)');
+          return;
+        }
     
     if (this.isEditing && this.currentCategory.id) {
       console.log('Updating category:', this.currentCategory);
