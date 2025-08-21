@@ -16,6 +16,11 @@ export class JourneyComponent implements OnInit {
   showModal = false;
   isEditing = false;
   currentJourney: Partial<Journey> = {};
+  
+  // Search functionality
+  searchId: number | null = null;
+  searchResult: Journey | null = null;
+  isSearching = false;
 
   constructor(private router: Router, private dataService: DataService) {}
 
@@ -116,5 +121,41 @@ export class JourneyComponent implements OnInit {
       default:
         return 'status-active';
     }
+  }
+
+  // Search methods
+  searchJourney() {
+    if (!this.searchId || this.searchId <= 0) {
+      alert('Please enter a valid positive ID');
+      return;
+    }
+    
+    this.isSearching = true;
+    this.dataService.searchJourneyById(this.searchId).subscribe({
+      next: (journey) => {
+        this.searchResult = journey;
+        this.journeys = [journey];
+        this.isSearching = false;
+      },
+      error: (error) => {
+        this.searchResult = null;
+        alert(`No journey found with ID ${this.searchId}`);
+        this.isSearching = false;
+        // Reload all journeys
+        this.loadJourneys();
+      }
+    });
+  }
+
+  clearSearch() {
+    this.searchId = null;
+    this.searchResult = null;
+    this.loadJourneys();
+  }
+
+  private loadJourneys() {
+    this.dataService.getJourneys().subscribe(journeys => {
+      this.journeys = journeys;
+    });
   }
 }

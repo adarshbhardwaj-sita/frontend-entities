@@ -16,6 +16,11 @@ export class BudgetCategoryComponent implements OnInit {
   showModal = false;
   isEditing = false;
   currentCategory: Partial<BudgetCategory> = {};
+  
+  // Search functionality
+  searchId: number | null = null;
+  searchResult: BudgetCategory | null = null;
+  isSearching = false;
 
   constructor(private router: Router, private dataService: DataService) {}
 
@@ -87,5 +92,41 @@ export class BudgetCategoryComponent implements OnInit {
           }
         });
       }
+  }
+
+  // Search methods
+  searchCategory() {
+    if (!this.searchId || this.searchId <= 0) {
+      alert('Please enter a valid positive ID');
+      return;
+    }
+    
+    this.isSearching = true;
+    this.dataService.searchBudgetCategoryById(this.searchId).subscribe({
+      next: (category) => {
+        this.searchResult = category;
+        this.budgetCategories = [category];
+        this.isSearching = false;
+      },
+      error: (error) => {
+        this.searchResult = null;
+        alert(`No budget category found with ID ${this.searchId}`);
+        this.isSearching = false;
+        // Reload all categories
+        this.loadCategories();
+      }
+    });
+  }
+
+  clearSearch() {
+    this.searchId = null;
+    this.searchResult = null;
+    this.loadCategories();
+  }
+
+  private loadCategories() {
+    this.dataService.getBudgetCategories().subscribe(categories => {
+      this.budgetCategories = categories;
+    });
   }
 }

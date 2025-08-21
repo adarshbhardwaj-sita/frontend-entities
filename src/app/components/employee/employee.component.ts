@@ -33,8 +33,47 @@ export class EmployeeComponent implements OnInit {
   
   // Make Math available in template
   Math = Math;
+  
+  // Search functionality
+  searchId: number | null = null;
+  searchResult: Employee | null = null;
+  isSearching = false;
 
   constructor(private router: Router, private dataService: DataService) { }
+
+  // Search methods
+  searchEmployee() {
+    if (!this.searchId || this.searchId <= 0) {
+      this.showErrorNotification('Please enter a valid positive ID');
+      return;
+    }
+    
+    this.isSearching = true;
+    this.dataService.searchEmployeeById(this.searchId).subscribe({
+      next: (employee) => {
+        this.searchResult = employee;
+        this.employees = [employee];
+        this.totalItems = 1;
+        this.currentPage = 1;
+        this.totalPages = 1;
+        this.showSuccessNotification(`Employee with ID ${this.searchId} found`);
+        this.isSearching = false;
+      },
+      error: (error) => {
+        this.searchResult = null;
+        this.showErrorNotification(`No employee found with ID ${this.searchId}`);
+        this.isSearching = false;
+        // Reload all employees
+        this.loadEmployees();
+      }
+    });
+  }
+
+  clearSearch() {
+    this.searchId = null;
+    this.searchResult = null;
+    this.loadEmployees();
+  }
 
   // Custom email validator
   validateEmail(control: AbstractControl): ValidationErrors | null {

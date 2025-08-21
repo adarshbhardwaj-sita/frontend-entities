@@ -78,6 +78,11 @@ export class DataService {
     return this.http.get<PaginatedResponse<Employee>>(url);
   }
 
+  // Search employee by ID
+  searchEmployeeById(id: number): Observable<Employee> {
+    return this.http.get<Employee>(`${this.apiUrl}/Employee/${id}`);
+  }
+
   // Mock data for development/testing
   private getMockEmployees(params?: PaginationParams): Observable<PaginatedResponse<Employee>> {
     console.log('getMockEmployees called with params:', params);
@@ -147,6 +152,11 @@ export class DataService {
     return this.http.get<BudgetCategory[]>(`${this.apiUrl}/BudgetCategory`);
   }
 
+  // Search budget category by ID
+  searchBudgetCategoryById(id: number): Observable<BudgetCategory> {
+    return this.http.get<BudgetCategory>(`${this.apiUrl}/BudgetCategory/${id}`);
+  }
+
   addBudgetCategory(category: Omit<BudgetCategory, 'id'>): Observable<BudgetCategory> {
     return this.http.post<BudgetCategory>(`${this.apiUrl}/BudgetCategory`, category);
   }
@@ -162,6 +172,11 @@ export class DataService {
   // Journey CRUD
   getJourneys(): Observable<Journey[]> {
     return this.http.get<Journey[]>(`${this.apiUrl}/Journey`);
+  }
+
+  // Search journey by ID
+  searchJourneyById(id: number): Observable<Journey> {
+    return this.http.get<Journey>(`${this.apiUrl}/Journey/${id}`);
   }
 
   addJourney(journey: Omit<Journey, 'journeyId'>): Observable<Journey> {
@@ -181,6 +196,11 @@ export class DataService {
     return this.http.get<Grade[]>(`${this.apiUrl}/Grade`);
   }
 
+  // Search grade by ID
+  searchGradeById(id: number): Observable<Grade> {
+    return this.http.get<Grade>(`${this.apiUrl}/Grade/${id}`);
+  }
+
   addGrade(grade: Omit<Grade, 'gradeId'>): Observable<Grade> {
     return this.http.post<Grade>(`${this.apiUrl}/Grade`, grade);
   }
@@ -198,6 +218,11 @@ export class DataService {
     return this.http.get<Role[]>(`${this.apiUrl}/Role`);
   }
 
+  // Search role by ID
+  searchRoleById(id: number): Observable<Role> {
+    return this.http.get<Role>(`${this.apiUrl}/Role/${id}`);
+  }
+
   addRole(role: Omit<Role, 'role_Id'>): Observable<Role> {
     return this.http.post<Role>(`${this.apiUrl}/Role`, role);
   }
@@ -213,6 +238,11 @@ export class DataService {
   // Technology CRUD
   getTechnologies(): Observable<Technology[]> {
     return this.http.get<Technology[]>(`${this.apiUrl}/Technologies`);
+  }
+
+  // Search technology by ID
+  searchTechnologyById(id: number): Observable<Technology> {
+    return this.http.get<Technology>(`${this.apiUrl}/Technologies/${id}`);
   }
 
   addTechnology(technology: Omit<Technology, 'id'>): Observable<Technology> {

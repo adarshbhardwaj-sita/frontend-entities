@@ -14,12 +14,42 @@
   <div class="table-container">
     <div class="table-header">
       <h2>Career Journeys</h2>
-      <button class="btn btn-primary" (click)="openAddModal()">
-        <i class="fas fa-plus"></i> Add Journey
-      </button>
+      <div class="header-actions">
+        <div class="search-container">
+          <input
+            type="number"
+            [(ngModel)]="searchId"
+            (keyup.enter)="searchJourney()"
+            placeholder="Search by ID..."
+            class="search-input"
+          />
+          <button class="btn btn-secondary" (click)="searchJourney()" [disabled]="isSearching">
+            <i class="fas fa-search" *ngIf="!isSearching"></i>
+            <i class="fas fa-spinner fa-spin" *ngIf="isSearching"></i>
+            {{ isSearching ? 'Searching...' : 'Search' }}
+          </button>
+          <button class="btn btn-outline" (click)="clearSearch()" *ngIf="searchId">
+            <i class="fas fa-times"></i> Clear
+          </button>
+        </div>
+        <button class="btn btn-primary" (click)="openAddModal()">
+          <i class="fas fa-plus"></i> Add Journey
+        </button>
+      </div>
     </div>
 
     <div class="table-wrapper">
+      <!-- Search result indicator -->
+      <div *ngIf="searchResult" class="search-result-indicator">
+        <div class="search-result-header">
+          <i class="fas fa-search"></i>
+          <span>Search Result: Journey ID {{ searchResult.journeyId }}</span>
+          <button class="btn btn-outline btn-sm" (click)="clearSearch()">
+            <i class="fas fa-times"></i> Clear Search
+          </button>
+        </div>
+      </div>
+
       <table class="data-table">
         <thead>
           <tr>
@@ -78,9 +108,23 @@
             [(ngModel)]="currentJourney.journeyId"
             name="journeyId"
             required
+            min="1"
             class="form-control"
             placeholder="Enter journey ID"
+            #journeyIdRef="ngModel"
           />
+          <div
+            class="error-message"
+            *ngIf="journeyForm.submitted && journeyIdRef.errors?.['required']"
+          >
+            ID is required
+          </div>
+          <div
+            class="error-message"
+            *ngIf="journeyForm.submitted && journeyIdRef.errors?.['min']"
+          >
+            ID must be a positive number
+          </div>
         </div>
         <div class="form-group">
           <label for="journeyName">Name</label>
@@ -168,8 +212,30 @@
             [(ngModel)]="currentJourney.durationInDays"
             name="durationInDays"
             required
+            min="1"
+            max="365"
             class="form-control"
+            placeholder="Enter duration in days"
+            #durationRef="ngModel"
           />
+          <div
+            class="error-message"
+            *ngIf="journeyForm.submitted && durationRef.errors?.['required']"
+          >
+            Duration is required
+          </div>
+          <div
+            class="error-message"
+            *ngIf="journeyForm.submitted && durationRef.errors?.['min']"
+          >
+            Duration must be at least 1 day
+          </div>
+          <div
+            class="error-message"
+            *ngIf="journeyForm.submitted && durationRef.errors?.['max']"
+          >
+            Duration cannot exceed 365 days
+          </div>
         </div>
         <div class="form-group">
           <label for="budget">Budget</label>
@@ -179,8 +245,24 @@
             [(ngModel)]="currentJourney.budget"
             name="budget"
             required
+            min="0.01"
+            step="0.01"
             class="form-control"
+            placeholder="Enter budget amount"
+            #budgetRef="ngModel"
           />
+          <div
+            class="error-message"
+            *ngIf="journeyForm.submitted && budgetRef.errors?.['required']"
+          >
+            Budget is required
+          </div>
+          <div
+            class="error-message"
+            *ngIf="journeyForm.submitted && budgetRef.errors?.['min']"
+          >
+            Budget must be greater than 0
+          </div>
         </div>
         <div class="modal-actions">
           <button
