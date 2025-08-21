@@ -14,12 +14,42 @@
   <div class="table-container">
     <div class="table-header">
       <h2>Grade Levels</h2>
-      <button class="btn btn-primary" (click)="openAddModal()">
-        <i class="fas fa-plus"></i> Add Grade
-      </button>
+      <div class="header-actions">
+        <div class="search-container">
+          <input
+            type="number"
+            [(ngModel)]="searchId"
+            (keyup.enter)="searchGrade()"
+            placeholder="Search by ID..."
+            class="search-input"
+          />
+          <button class="btn btn-secondary" (click)="searchGrade()" [disabled]="isSearching">
+            <i class="fas fa-search" *ngIf="!isSearching"></i>
+            <i class="fas fa-spinner fa-spin" *ngIf="isSearching"></i>
+            {{ isSearching ? 'Searching...' : 'Search' }}
+          </button>
+          <button class="btn btn-outline" (click)="clearSearch()" *ngIf="searchId">
+            <i class="fas fa-times"></i> Clear
+          </button>
+        </div>
+        <button class="btn btn-primary" (click)="openAddModal()">
+          <i class="fas fa-plus"></i> Add Grade
+        </button>
+      </div>
     </div>
 
     <div class="table-wrapper">
+      <!-- Search result indicator -->
+      <div *ngIf="searchResult" class="search-result-indicator">
+        <div class="search-result-header">
+          <i class="fas fa-search"></i>
+          <span>Search Result: Grade ID {{ searchResult.gradeId }}</span>
+          <button class="btn btn-outline btn-sm" (click)="clearSearch()">
+            <i class="fas fa-times"></i> Clear Search
+          </button>
+        </div>
+      </div>
+
       <table class="data-table">
         <thead>
           <tr>
@@ -72,9 +102,21 @@
             [(ngModel)]="currentGrade.gradeId"
             name="gradeId"
             required
+            min="1"
             class="form-control"
+            [class.invalid]="gradeIdRef.invalid && gradeIdRef.touched"
+            [class.valid]="gradeIdRef.valid && gradeIdRef.touched"
             placeholder="Enter grade ID"
+            #gradeIdRef="ngModel"
+            (blur)="validateField(gradeIdRef)"
           />
+          <div
+            class="error-message"
+            *ngIf="gradeIdRef.invalid && gradeIdRef.touched"
+          >
+            <span *ngIf="gradeIdRef.errors?.['required']">ID is required</span>
+            <span *ngIf="gradeIdRef.errors?.['min']">ID must be a positive number</span>
+          </div>
         </div>
         <div class="form-group">
           <label for="gradeLevel">Grade Level</label>
@@ -87,19 +129,20 @@
             minlength="3"
             maxlength="50"
             class="form-control"
+            [class.invalid]="gradeLevelRef.invalid && gradeLevelRef.touched"
+            [class.valid]="gradeLevelRef.valid && gradeLevelRef.touched"
+            placeholder="Enter grade level"
             #gradeLevelRef="ngModel"
+            (blur)="validateField(gradeLevelRef)"
+            (input)="validateField(gradeLevelRef)"
           />
           <div
             class="error-message"
-            *ngIf="gradeForm.submitted && gradeLevelRef.errors?.['required']"
+            *ngIf="gradeLevelRef.invalid && gradeLevelRef.touched"
           >
-            Grade level is required
-          </div>
-          <div
-            class="error-message"
-            *ngIf="gradeForm.submitted && (gradeLevelRef.errors?.['minlength'] || gradeLevelRef.errors?.['maxlength'])"
-          >
-            Grade level must be between 3 and 50 characters.
+            <span *ngIf="gradeLevelRef.errors?.['required']">Grade level is required</span>
+            <span *ngIf="gradeLevelRef.errors?.['minlength']">Grade level must be at least 3 characters</span>
+            <span *ngIf="gradeLevelRef.errors?.['maxlength']">Grade level cannot exceed 50 characters</span>
           </div>
         </div>
         <div class="form-group">
@@ -112,20 +155,21 @@
             minlength="5"
             maxlength="200"
             class="form-control"
+            [class.invalid]="gradeDescRef.invalid && gradeDescRef.touched"
+            [class.valid]="gradeDescRef.valid && gradeDescRef.touched"
             rows="2"
+            placeholder="Enter grade description"
             #gradeDescRef="ngModel"
+            (blur)="validateField(gradeDescRef)"
+            (input)="validateField(gradeDescRef)"
           ></textarea>
           <div
             class="error-message"
-            *ngIf="gradeForm.submitted && gradeDescRef.errors?.['required']"
+            *ngIf="gradeDescRef.invalid && gradeDescRef.touched"
           >
-            Description is required
-          </div>
-          <div
-            class="error-message"
-            *ngIf="gradeForm.submitted && (gradeDescRef.errors?.['minlength'] || gradeDescRef.errors?.['maxlength'])"
-          >
-            Description must be between 5 and 200 characters.
+            <span *ngIf="gradeDescRef.errors?.['required']">Description is required</span>
+            <span *ngIf="gradeDescRef.errors?.['minlength']">Description must be at least 5 characters</span>
+            <span *ngIf="gradeDescRef.errors?.['maxlength']">Description cannot exceed 200 characters</span>
           </div>
         </div>
         <div class="modal-actions">

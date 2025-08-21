@@ -16,6 +16,11 @@ export class RoleComponent implements OnInit {
   showModal = false;
   isEditing = false;
   currentRole: Partial<Role> = {};
+  
+  // Search functionality
+  searchId: number | null = null;
+  searchResult: Role | null = null;
+  isSearching = false;
 
   constructor(private router: Router, private dataService: DataService) {}
 
@@ -54,33 +59,7 @@ export class RoleComponent implements OnInit {
     };
   }
 
-  saveRole() {
-      if (this.isEditing && this.currentRole.role_Id) {
-        this.dataService.updateRole(this.currentRole as Role).subscribe({
-          next: () => {
-            this.dataService.getRoles().subscribe(roles => {
-              this.roles = roles;
-            });
-            this.closeModal();
-          },
-          error: (error: Error) => {
-            console.error('Error updating role:', error);
-          }
-        });
-      } else {
-        this.dataService.addRole(this.currentRole as Omit<Role, 'role_Id'>).subscribe({
-          next: () => {
-            this.dataService.getRoles().subscribe(roles => {
-              this.roles = roles;
-            });
-            this.closeModal();
-          },
-          error: (error: Error) => {
-            console.error('Error adding role:', error);
-          }
-        });
-      }
-  }
+
 
   deleteRole(id: number) {
       if (confirm('Are you sure you want to delete this role?')) {
@@ -95,5 +74,106 @@ export class RoleComponent implements OnInit {
           }
         });
       }
+  }
+
+  // Search methods
+  searchRole() {
+    if (!this.searchId || this.searchId <= 0) {
+      alert('Please enter a valid positive ID');
+      return;
+    }
+    
+    this.isSearching = true;
+    this.dataService.searchRoleById(this.searchId).subscribe({
+      next: (role) => {
+        this.searchResult = role;
+        this.roles = [role];
+        this.isSearching = false;
+      },
+      error: (error) => {
+        this.searchResult = null;
+        alert(`No role found with ID ${this.searchId}`);
+        this.isSearching = false;
+        // Reload all roles
+        this.loadRoles();
+      }
+    });
+  }
+
+  clearSearch() {
+    this.searchId = null;
+    this.searchResult = null;
+    this.loadRoles();
+  }
+
+  private loadRoles() {
+    this.dataService.getRoles().subscribe(roles => {
+      this.roles = roles;
+    });
+  }
+
+  // Validation methods
+  validateField(control: any) {
+    // Trigger validation on blur and input
+    if (control.invalid && control.touched) {
+      control.markAsTouched();
+    }
+  }
+
+  // Enhanced save with validation
+  saveRole() {
+    // Mark all fields as touched to trigger validation display
+    const form = document.querySelector('form');
+    if (form) {
+      const inputs = form.querySelectorAll('input, textarea');
+      inputs.forEach((input: any) => {
+        if (input.ngModel) {
+          input.ngModel.markAsTouched();
+        }
+      });
+    }
+
+    // Check if form is valid before saving
+    if (this.currentRole.role_Id && this.currentRole.role_Id <= 0) {
+      alert('Role ID must be a positive number');
+      return;
+    }
+
+    if (!this.currentRole.role_Title || this.currentRole.role_Title.length < 3) {
+      alert('Role title must be at least 3 characters long');
+      return;
+    }
+
+    if (!this.currentRole.project_Name || this.currentRole.project_Name.length < 3) {
+      alert('Project name must be at least 3 characters long');
+      return;
+    }
+
+    // Proceed with save if validation passes
+    if (this.isEditing && this.currentRole.role_Id) {
+      this.dataService.updateRole(this.currentRole as Role).subscribe({
+        next: () => {
+          this.dataService.getRoles().subscribe(roles => {
+            this.roles = roles;
+          });
+          this.closeModal();
+        },
+        error: (error: Error) => {
+          console.error('Error updating role:', error);
+        }
+      });
+    } else {
+      this.dataService.addRole(this.currentRole as Omit<Role, 'role_Id'>).subscribe({
+        next: () => {
+          this.dataService.getRoles().subscribe(roles => {
+            this.roles = roles;
+          });
+          this.closeModal();
+        },
+        error: (error: Error) => {
+          console.error('Error adding role:', error);
+        }
+      });
+    }
   }
 }

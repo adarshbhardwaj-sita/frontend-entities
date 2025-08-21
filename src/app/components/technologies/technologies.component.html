@@ -14,12 +14,42 @@
   <div class="table-container">
     <div class="table-header">
       <h2>Technology Stack</h2>
-      <button class="btn btn-primary" (click)="openAddModal()">
-        <i class="fas fa-plus"></i> Add Technology
-      </button>
+      <div class="header-actions">
+        <div class="search-container">
+          <input
+            type="number"
+            [(ngModel)]="searchId"
+            (keyup.enter)="searchTechnology()"
+            placeholder="Search by ID..."
+            class="search-input"
+          />
+          <button class="btn btn-secondary" (click)="searchTechnology()" [disabled]="isSearching">
+            <i class="fas fa-search" *ngIf="!isSearching"></i>
+            <i class="fas fa-spinner fa-spin" *ngIf="isSearching"></i>
+            {{ isSearching ? 'Searching...' : 'Search' }}
+          </button>
+          <button class="btn btn-outline" (click)="clearSearch()" *ngIf="searchId">
+            <i class="fas fa-times"></i> Clear
+          </button>
+        </div>
+        <button class="btn btn-primary" (click)="openAddModal()">
+          <i class="fas fa-plus"></i> Add Technology
+        </button>
+      </div>
     </div>
 
     <div class="table-wrapper">
+      <!-- Search result indicator -->
+      <div *ngIf="searchResult" class="search-result-indicator">
+        <div class="search-result-header">
+          <i class="fas fa-search"></i>
+          <span>Search Result: Technology ID {{ searchResult.id }}</span>
+          <button class="btn btn-outline btn-sm" (click)="clearSearch()">
+            <i class="fas fa-times"></i> Clear Search
+          </button>
+        </div>
+      </div>
+
       <table class="data-table">
         <thead>
           <tr>
@@ -79,9 +109,21 @@
             [(ngModel)]="currentTechnology.id"
             name="id"
             required
+            min="1"
             class="form-control"
+            [class.invalid]="idRef.invalid && idRef.touched"
+            [class.valid]="idRef.valid && idRef.touched"
             placeholder="Enter technology ID"
+            #idRef="ngModel"
+            (blur)="validateField(idRef)"
           />
+          <div
+            class="error-message"
+            *ngIf="idRef.invalid && idRef.touched"
+          >
+            <span *ngIf="idRef.errors?.['required']">ID is required</span>
+            <span *ngIf="idRef.errors?.['min']">ID must be a positive number</span>
+          </div>
         </div>
         <div class="form-group">
           <label for="technologyStack">Technology Stack</label>
@@ -91,23 +133,24 @@
             name="technologyStack"
             required
             minlength="3"
+            maxlength="500"
             class="form-control"
+            [class.invalid]="technologyStackRef.invalid && technologyStackRef.touched"
+            [class.valid]="technologyStackRef.valid && technologyStackRef.touched"
             rows="3"
             placeholder="e.g., Angular, TypeScript, RxJS"
             #technologyStackRef="ngModel"
+            (blur)="validateField(technologyStackRef)"
+            (input)="validateField(technologyStackRef)"
           ></textarea>
           <small class="form-help">Separate technologies with commas</small>
           <div
             class="error-message"
-            *ngIf="technologyForm.submitted && technologyStackRef.errors?.['required']"
+            *ngIf="technologyStackRef.invalid && technologyStackRef.touched"
           >
-            Project name is required
-          </div>
-          <div
-            class="error-message"
-            *ngIf="technologyForm.submitted && technologyStackRef.errors?.['minlength']"
-          >
-            Project name must be at least 3 characters.
+            <span *ngIf="technologyStackRef.errors?.['required']">Technology stack is required</span>
+            <span *ngIf="technologyStackRef.errors?.['minlength']">Technology stack must be at least 3 characters</span>
+            <span *ngIf="technologyStackRef.errors?.['maxlength']">Technology stack cannot exceed 500 characters</span>
           </div>
         </div>
         <div class="modal-actions">
