@@ -21,12 +21,20 @@
             placeholder="Search by ID..."
             class="search-input"
           />
-          <button class="btn btn-secondary" (click)="searchCategory()" [disabled]="isSearching">
+          <button
+            class="btn btn-secondary"
+            (click)="searchCategory()"
+            [disabled]="isSearching"
+          >
             <i class="fas fa-search" *ngIf="!isSearching"></i>
             <i class="fas fa-spinner fa-spin" *ngIf="isSearching"></i>
-            {{ isSearching ? 'Searching...' : 'Search' }}
+            {{ isSearching ? "Searching..." : "Search" }}
           </button>
-          <button class="btn btn-outline" (click)="clearSearch()" *ngIf="searchId">
+          <button
+            class="btn btn-outline"
+            (click)="clearSearch()"
+            *ngIf="searchId"
+          >
             <i class="fas fa-times"></i> Clear
           </button>
         </div>
@@ -179,14 +187,15 @@
         <div class="form-group">
           <label for="financialYear">Financial Year</label>
           <input
-            type="text"
+            type="number"
             id="financialYear"
             [(ngModel)]="currentCategory.financialYear"
             name="financialYear"
             required
-            pattern="^\d{4}-\d{2}$"
+            min="1900"
+            max="2100"
             class="form-control"
-            placeholder="e.g., 2024-25"
+            placeholder="e.g., 2025"
             #financialYearRef="ngModel"
           />
           <div
@@ -197,9 +206,9 @@
           </div>
           <div
             class="error-message"
-            *ngIf="categoryForm.submitted && financialYearRef.errors?.['pattern']"
+            *ngIf="categoryForm.submitted && (financialYearRef.errors?.['min'] || financialYearRef.errors?.['max'])"
           >
-            Financial year must be in format YYYY-YY (e.g., 2024-25)
+            Financial year must be a 4-digit year between 1900 and 2100
           </div>
         </div>
         <div class="modal-actions">
@@ -210,10 +219,7 @@
           >
             Cancel
           </button>
-          <button
-            type="submit"
-            class="btn btn-primary"
-          >
+          <button type="submit" class="btn btn-primary">
             {{ isEditing ? "Update" : "Add" }}
           </button>
         </div>
