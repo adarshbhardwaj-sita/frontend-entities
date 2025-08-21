@@ -23,12 +23,20 @@
             placeholder="Search by ID..."
             class="search-input"
           />
-          <button class="btn btn-secondary" (click)="searchJourney()" [disabled]="isSearching">
+          <button
+            class="btn btn-secondary"
+            (click)="searchJourney()"
+            [disabled]="isSearching"
+          >
             <i class="fas fa-search" *ngIf="!isSearching"></i>
             <i class="fas fa-spinner fa-spin" *ngIf="isSearching"></i>
-            {{ isSearching ? 'Searching...' : 'Search' }}
+            {{ isSearching ? "Searching..." : "Search" }}
           </button>
-          <button class="btn btn-outline" (click)="clearSearch()" *ngIf="searchId">
+          <button
+            class="btn btn-outline"
+            (click)="clearSearch()"
+            *ngIf="searchId"
+          >
             <i class="fas fa-times"></i> Clear
           </button>
         </div>
@@ -272,11 +280,7 @@
           >
             Cancel
           </button>
-          <button
-            type="submit"
-            class="btn btn-primary"
-            [disabled]="!journeyForm.form.valid"
-          >
+          <button type="submit" class="btn btn-primary">
             {{ isEditing ? "Update" : "Add" }}
           </button>
         </div>
