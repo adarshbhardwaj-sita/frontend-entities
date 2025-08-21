@@ -12,6 +12,10 @@ import { DataService, Grade } from '../../services/data.service';
   styleUrls: ['./grade.component.scss']
 })
 export class GradeComponent implements OnInit {
+  // Notification properties
+  showNotification: boolean = false;
+  notificationMessage: string = '';
+  notificationType: 'success' | 'error' = 'success';
   grades: Grade[] = [];
   showModal = false;
   isEditing = false;
@@ -62,27 +66,26 @@ export class GradeComponent implements OnInit {
 
 
   deleteGrade(id: number) {
-      if (confirm('Are you sure you want to delete this grade?')) {
-        this.dataService.deleteGrade(id).subscribe({
-          next: () => {
-            this.dataService.getGrades().subscribe(grades => {
-              this.grades = grades;
-            });
-          },
-          error: (error: Error) => {
-            console.error('Error deleting grade:', error);
-          }
-        });
-      }
+    if (confirm('Are you sure you want to delete this grade?')) {
+      this.dataService.deleteGrade(id).subscribe({
+        next: () => {
+          this.dataService.getGrades().subscribe(grades => {
+            this.grades = grades;
+          });
+        },
+        error: (error: Error) => {
+          this.showErrorNotification(this.getErrorMessage(error, 'delete'));
+        }
+      });
+    }
   }
 
   // Search methods
   searchGrade() {
     if (!this.searchId || this.searchId <= 0) {
-      alert('Please enter a valid positive ID');
+      this.showErrorNotification('Please enter a valid positive ID');
       return;
     }
-    
     this.isSearching = true;
     this.dataService.searchGradeById(this.searchId).subscribe({
       next: (grade) => {
@@ -92,12 +95,40 @@ export class GradeComponent implements OnInit {
       },
       error: (error) => {
         this.searchResult = null;
-        alert(`No grade found with ID ${this.searchId}`);
+        this.showErrorNotification(`No grade found with ID ${this.searchId}`);
         this.isSearching = false;
         // Reload all grades
         this.loadGrades();
       }
     });
+  }
+  showErrorNotification(message: string) {
+    this.notificationType = 'error';
+    this.notificationMessage = message;
+    this.showNotification = true;
+    setTimeout(() => {
+      this.showNotification = false;
+    }, 5000);
+  }
+
+  closeNotification() {
+    this.showNotification = false;
+  }
+
+  getErrorMessage(error: any, action: string): string {
+    if (error && error.error && typeof error.error === 'string') {
+      if (error.error.toLowerCase().includes('duplicate')) {
+        return 'Duplicate entry detected. Please use a unique value.';
+      }
+      return error.error;
+    }
+    if (error && error.message) {
+      if (error.message.toLowerCase().includes('duplicate')) {
+        return 'Duplicate entry detected. Please use a unique value.';
+      }
+      return error.message;
+    }
+    return `Failed to ${action} grade. Please try again.`;
   }
 
   clearSearch() {

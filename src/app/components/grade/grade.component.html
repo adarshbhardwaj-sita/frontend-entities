@@ -1,3 +1,12 @@
+<!-- Notification Dialog -->
+<div
+  *ngIf="showNotification"
+  class="notification-dialog"
+  [ngClass]="notificationType"
+>
+  <span>{{ notificationMessage }}</span>
+  <button class="close-btn" (click)="closeNotification()">&times;</button>
+</div>
 <div class="page-container">
   <header class="page-header">
     <nav class="breadcrumb">
@@ -23,12 +32,20 @@
             placeholder="Search by ID..."
             class="search-input"
           />
-          <button class="btn btn-secondary" (click)="searchGrade()" [disabled]="isSearching">
+          <button
+            class="btn btn-secondary"
+            (click)="searchGrade()"
+            [disabled]="isSearching"
+          >
             <i class="fas fa-search" *ngIf="!isSearching"></i>
             <i class="fas fa-spinner fa-spin" *ngIf="isSearching"></i>
-            {{ isSearching ? 'Searching...' : 'Search' }}
+            {{ isSearching ? "Searching..." : "Search" }}
           </button>
-          <button class="btn btn-outline" (click)="clearSearch()" *ngIf="searchId">
+          <button
+            class="btn btn-outline"
+            (click)="clearSearch()"
+            *ngIf="searchId"
+          >
             <i class="fas fa-times"></i> Clear
           </button>
         </div>
@@ -115,7 +132,9 @@
             *ngIf="gradeIdRef.invalid && gradeIdRef.touched"
           >
             <span *ngIf="gradeIdRef.errors?.['required']">ID is required</span>
-            <span *ngIf="gradeIdRef.errors?.['min']">ID must be a positive number</span>
+            <span *ngIf="gradeIdRef.errors?.['min']"
+              >ID must be a positive number</span
+            >
           </div>
         </div>
         <div class="form-group">
@@ -140,9 +159,15 @@
             class="error-message"
             *ngIf="gradeLevelRef.invalid && gradeLevelRef.touched"
           >
-            <span *ngIf="gradeLevelRef.errors?.['required']">Grade level is required</span>
-            <span *ngIf="gradeLevelRef.errors?.['minlength']">Grade level must be at least 3 characters</span>
-            <span *ngIf="gradeLevelRef.errors?.['maxlength']">Grade level cannot exceed 50 characters</span>
+            <span *ngIf="gradeLevelRef.errors?.['required']"
+              >Grade level is required</span
+            >
+            <span *ngIf="gradeLevelRef.errors?.['minlength']"
+              >Grade level must be at least 3 characters</span
+            >
+            <span *ngIf="gradeLevelRef.errors?.['maxlength']"
+              >Grade level cannot exceed 50 characters</span
+            >
           </div>
         </div>
         <div class="form-group">
@@ -167,9 +192,15 @@
             class="error-message"
             *ngIf="gradeDescRef.invalid && gradeDescRef.touched"
           >
-            <span *ngIf="gradeDescRef.errors?.['required']">Description is required</span>
-            <span *ngIf="gradeDescRef.errors?.['minlength']">Description must be at least 5 characters</span>
-            <span *ngIf="gradeDescRef.errors?.['maxlength']">Description cannot exceed 200 characters</span>
+            <span *ngIf="gradeDescRef.errors?.['required']"
+              >Description is required</span
+            >
+            <span *ngIf="gradeDescRef.errors?.['minlength']"
+              >Description must be at least 5 characters</span
+            >
+            <span *ngIf="gradeDescRef.errors?.['maxlength']"
+              >Description cannot exceed 200 characters</span
+            >
           </div>
         </div>
         <div class="modal-actions">

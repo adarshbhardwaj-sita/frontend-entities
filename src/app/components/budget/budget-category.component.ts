@@ -22,6 +22,11 @@ export class BudgetCategoryComponent implements OnInit {
   searchResult: BudgetCategory | null = null;
   isSearching = false;
 
+  // Notification properties
+  showNotification = false;
+  notificationMessage = '';
+  notificationType: 'success' | 'error' = 'success';
+
   constructor(private router: Router, private dataService: DataService) {}
 
   ngOnInit() {
@@ -65,76 +70,70 @@ export class BudgetCategoryComponent implements OnInit {
   }
 
   saveCategory() {
-    console.log('saveCategory called');
-    
     // Basic validation
     if (!this.currentCategory.id || this.currentCategory.id <= 0) {
-      alert('Please enter a valid positive ID');
+      this.showErrorNotification('Please enter a valid positive ID');
       return;
     }
     if (!this.currentCategory.categoryType || this.currentCategory.categoryType.trim().length < 2) {
-      alert('Please enter a valid category type (at least 2 characters)');
+      this.showErrorNotification('Please enter a valid category type (at least 2 characters)');
       return;
     }
     if (!this.currentCategory.budgetAmount || this.currentCategory.budgetAmount <= 0) {
-      alert('Please enter a valid budget amount greater than 0');
+      this.showErrorNotification('Please enter a valid budget amount greater than 0');
       return;
     }
-        if (
-          !this.currentCategory.financialYear ||
-          typeof this.currentCategory.financialYear !== 'number' ||
-          this.currentCategory.financialYear < 1900 ||
-          this.currentCategory.financialYear > 2100 ||
-          !Number.isInteger(this.currentCategory.financialYear)
-        ) {
-          alert('Please enter a valid financial year as a 4-digit number (e.g., 2025)');
-          return;
-        }
+    if (
+      !this.currentCategory.financialYear ||
+      typeof this.currentCategory.financialYear !== 'number' ||
+      this.currentCategory.financialYear < 1900 ||
+      this.currentCategory.financialYear > 2100 ||
+      !Number.isInteger(this.currentCategory.financialYear)
+    ) {
+      this.showErrorNotification('Please enter a valid financial year as a 4-digit number (e.g., 2025)');
+      return;
+    }
     
     if (this.isEditing && this.currentCategory.id) {
-      console.log('Updating category:', this.currentCategory);
       this.dataService.updateBudgetCategory(this.currentCategory as BudgetCategory).subscribe({
         next: () => {
-          console.log('Category updated successfully');
           this.dataService.getBudgetCategories().subscribe(categories => {
             this.budgetCategories = categories;
           });
           this.closeModal();
         },
         error: (error: Error) => {
-          console.error('Error updating category:', error);
+          console.log('Update error:', error);
+          this.showErrorNotification(this.getErrorMessage(error, 'update'));
         }
       });
     } else {
-      console.log('Adding new category:', this.currentCategory);
       this.dataService.addBudgetCategory(this.currentCategory as Omit<BudgetCategory, 'id'>).subscribe({
         next: () => {
-          console.log('Category added successfully');
           this.dataService.getBudgetCategories().subscribe(categories => {
             this.budgetCategories = categories;
           });
           this.closeModal();
         },
         error: (error: Error) => {
-          console.error('Error adding category:', error);
+          console.log('Add error:', error);
+          this.showErrorNotification(this.getErrorMessage(error, 'add'));
         }
       });
     }
   }
 
   deleteCategory(id: number) {
-    console.log('deleteCategory called with id:', id);
     if (confirm('Are you sure you want to delete this budget category?')) {
-      console.log('Deleting category with id:', id);
       this.dataService.deleteBudgetCategory(id).subscribe({
         next: () => {
-          console.log('Category deleted successfully');
           this.dataService.getBudgetCategories().subscribe(categories => {
             this.budgetCategories = categories;
           });
         },
         error: (error: Error) => {
-          console.error('Error deleting category:', error);
+          console.log('Delete error:', error);
+          this.showErrorNotification(this.getErrorMessage(error, 'delete'));
         }
       });
     }
@@ -143,10 +142,9 @@ export class BudgetCategoryComponent implements OnInit {
   // Search methods
   searchCategory() {
     if (!this.searchId || this.searchId <= 0) {
-      alert('Please enter a valid positive ID');
+      this.showErrorNotification('Please enter a valid positive ID');
       return;
     }
-    
     this.isSearching = true;
     this.dataService.searchBudgetCategoryById(this.searchId).subscribe({
       next: (category) => {
@@ -155,13 +153,43 @@ export class BudgetCategoryComponent implements OnInit {
         this.isSearching = false;
       },
       error: (error) => {
+        console.log('Search error:', error);
         this.searchResult = null;
-        alert(`No budget category found with ID ${this.searchId}`);
+        this.showErrorNotification(`No budget category found with ID ${this.searchId}`);
         this.isSearching = false;
         // Reload all categories
         this.loadCategories();
       }
     });
+  }
+  showErrorNotification(message: string) {
+    this.notificationType = 'error';
+    this.notificationMessage = message;
+    this.showNotification = true;
+    setTimeout(() => {
+      this.showNotification = false;
+    }, 5000);
+  }
+
+  closeNotification() {
+    this.showNotification = false;
+  }
+
+  getErrorMessage(error: any, action: string): string {
+    // Try to detect duplicate entry or other backend errors
+    if (error && error.error && typeof error.error === 'string') {
+      if (error.error.toLowerCase().includes('duplicate')) {
+        return 'Duplicate entry detected. Please use a unique value.';
+      }
+      return error.error;
+    }
+    if (error && error.message) {
+      if (error.message.toLowerCase().includes('duplicate')) {
+        return 'Duplicate entry detected. Please use a unique value.';
+      }
+      return error.message;
+    }
+    return `Failed to ${action} budget category. Please try again.`;
   }
 
   clearSearch() {
