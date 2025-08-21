@@ -167,17 +167,17 @@ export class GradeComponent implements OnInit {
 
     // Check if form is valid before saving
     if (this.currentGrade.gradeId && this.currentGrade.gradeId <= 0) {
-      alert('Grade ID must be a positive number');
+      this.showErrorNotification('Grade ID must be a positive number');
       return;
     }
 
     if (!this.currentGrade.gradeLevel || this.currentGrade.gradeLevel.length < 3) {
-      alert('Grade level must be at least 3 characters long');
+      this.showErrorNotification('Grade level must be at least 3 characters long');
       return;
     }
 
     if (!this.currentGrade.gradeDescription || this.currentGrade.gradeDescription.length < 5) {
-      alert('Description must be at least 5 characters long');
+      this.showErrorNotification('Description must be at least 5 characters long');
       return;
     }
 
@@ -190,8 +190,8 @@ export class GradeComponent implements OnInit {
           });
           this.closeModal();
         },
-        error: (error: Error) => {
-          console.error('Error updating grade:', error);
+        error: () => {
+          this.showErrorNotification(this.getErrorMessage('', 'update'));
         }
       });
     } else {
@@ -202,8 +202,8 @@ export class GradeComponent implements OnInit {
           });
           this.closeModal();
         },
-        error: (error: Error) => {
-          console.error('Error adding grade:', error);
+        error: () => {
+          this.showErrorNotification(this.getErrorMessage('', 'add'));
         }
       });
     }

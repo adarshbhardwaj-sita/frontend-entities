@@ -157,17 +157,17 @@ export class RoleComponent implements OnInit {
 
     // Check if form is valid before saving
     if (this.currentRole.role_Id && this.currentRole.role_Id <= 0) {
-      alert('Role ID must be a positive number');
+      this.showErrorNotification('Role ID must be a positive number');
       return;
     }
 
     if (!this.currentRole.role_Title || this.currentRole.role_Title.length < 3) {
-      alert('Role title must be at least 3 characters long');
+      this.showErrorNotification('Role title must be at least 3 characters long');
       return;
     }
 
     if (!this.currentRole.project_Name || this.currentRole.project_Name.length < 3) {
-      alert('Project name must be at least 3 characters long');
+      this.showErrorNotification('Project name must be at least 3 characters long');
       return;
     }
 
@@ -180,8 +180,8 @@ export class RoleComponent implements OnInit {
           });
           this.closeModal();
         },
-        error: (error: Error) => {
-          console.error('Error updating role:', error);
+        error: () => {
+          this.showErrorNotification(this.getErrorMessage('', 'update'));
         }
       });
     } else {
@@ -192,8 +192,8 @@ export class RoleComponent implements OnInit {
           });
           this.closeModal();
         },
-        error: (error: Error) => {
-          console.error('Error adding role:', error);
+        error: () => {
+          this.showErrorNotification(this.getErrorMessage('', 'add'));
         }
       });
     }

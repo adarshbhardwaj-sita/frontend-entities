@@ -158,12 +158,12 @@ export class TechnologiesComponent implements OnInit {
 
     // Check if form is valid before saving
     if (this.currentTechnology.id && this.currentTechnology.id <= 0) {
-      alert('Technology ID must be a positive number');
+      this.showErrorNotification('Technology ID must be a positive number');
       return;
     }
 
     if (!this.currentTechnology.technologyStack || this.currentTechnology.technologyStack.length < 3) {
-      alert('Technology stack must be at least 3 characters long');
+      this.showErrorNotification('Technology stack must be at least 3 characters long');
       return;
     }
 
@@ -176,8 +176,8 @@ export class TechnologiesComponent implements OnInit {
           });
           this.closeModal();
         },
-        error: (error: Error) => {
-          console.error('Error updating technology:', error);
+        error: () => {
+          this.showErrorNotification(this.getErrorMessage('', 'update'));
         }
       });
     } else {
@@ -188,8 +188,8 @@ export class TechnologiesComponent implements OnInit {
           });
           this.closeModal();
         },
-        error: (error: Error) => {
-          console.error('Error adding technology:', error);
+        error: () => {
+          this.showErrorNotification(this.getErrorMessage('', 'add'));
         }
       });
     }
