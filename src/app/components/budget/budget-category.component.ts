@@ -176,19 +176,7 @@ export class BudgetCategoryComponent implements OnInit {
   }
 
   getErrorMessage(error: any, action: string): string {
-    // Try to detect duplicate entry or other backend errors
-    if (error && error.error && typeof error.error === 'string') {
-      if (error.error.toLowerCase().includes('duplicate')) {
-        return 'Duplicate entry detected. Please use a unique value.';
-      }
-      return error.error;
-    }
-    if (error && error.message) {
-      if (error.message.toLowerCase().includes('duplicate')) {
-        return 'Duplicate entry detected. Please use a unique value.';
-      }
-      return error.message;
-    }
+    // Always show a generic error message
     return `Failed to ${action} budget category. Please try again.`;
   }
 
