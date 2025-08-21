@@ -2,8 +2,7 @@
 .notification-dialog {
   position: fixed;
   top: 32px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 32px;
   min-width: 320px;
   max-width: 90vw;
   background: #fff;
@@ -17,7 +16,7 @@
   align-items: center;
   gap: 1rem;
   font-size: 1rem;
-  animation: fadeInDown 0.3s;
+  animation: fadeInLeft 0.3s;
 }
 .notification-dialog.success {
   color: #059669;
@@ -31,9 +30,9 @@
   cursor: pointer;
   margin-left: auto;
 }
-@keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-30px) translateX(-50%); }
-  to { opacity: 1; transform: translateY(0) translateX(-50%); }
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 .page-container {
     min-height: 100vh;

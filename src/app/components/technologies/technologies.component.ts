@@ -12,6 +12,10 @@ import { DataService, Technology } from '../../services/data.service';
   styleUrls: ['./technologies.component.scss']
 })
 export class TechnologiesComponent implements OnInit {
+  // Notification properties
+  showNotification = false;
+  notificationMessage = '';
+  notificationType: 'success' | 'error' = 'error';
   technologies: Technology[] = [];
   showModal = false;
   isEditing = false;
@@ -67,8 +71,8 @@ export class TechnologiesComponent implements OnInit {
               this.technologies = technologies;
             });
           },
-          error: (error: Error) => {
-            console.error('Error deleting technology:', error);
+          error: () => {
+            this.showErrorNotification(this.getErrorMessage('','delete'));
           }
         });
       }
@@ -92,14 +96,31 @@ export class TechnologiesComponent implements OnInit {
         this.technologies = [technology];
         this.isSearching = false;
       },
-      error: (error) => {
+      error: () => {
         this.searchResult = null;
-        alert(`No technology found with ID ${this.searchId}`);
+        this.showErrorNotification(this.getErrorMessage('','search'));
         this.isSearching = false;
         // Reload all technologies
         this.loadTechnologies();
       }
     });
+  }
+  showErrorNotification(message: string) {
+    this.notificationType = 'error';
+    this.notificationMessage = message;
+    this.showNotification = true;
+    setTimeout(() => {
+      this.showNotification = false;
+    }, 5000);
+  }
+
+  closeNotification() {
+    this.showNotification = false;
+  }
+
+  getErrorMessage(_error: any, action: string): string {
+    // Always show a generic error message
+    return `Failed to ${action} technology. Please try again.`;
   }
 
   clearSearch() {

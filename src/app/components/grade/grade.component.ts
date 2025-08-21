@@ -13,9 +13,10 @@ import { DataService, Grade } from '../../services/data.service';
 })
 export class GradeComponent implements OnInit {
   // Notification properties
-  showNotification: boolean = false;
-  notificationMessage: string = '';
-  notificationType: 'success' | 'error' = 'success';
+  showNotification = false;
+  notificationMessage = '';
+  notificationType: 'success' | 'error' = 'error';
+  // Notification properties
   grades: Grade[] = [];
   showModal = false;
   isEditing = false;
@@ -73,8 +74,8 @@ export class GradeComponent implements OnInit {
             this.grades = grades;
           });
         },
-        error: (error: Error) => {
-          this.showErrorNotification(this.getErrorMessage(error, 'delete'));
+        error: () => {
+          this.showErrorNotification(this.getErrorMessage('','delete'));
         }
       });
     }
@@ -93,9 +94,9 @@ export class GradeComponent implements OnInit {
         this.grades = [grade];
         this.isSearching = false;
       },
-      error: (error) => {
+      error: () => {
         this.searchResult = null;
-        this.showErrorNotification(`No grade found with ID ${this.searchId}`);
+        this.showErrorNotification(this.getErrorMessage('','search'));
         this.isSearching = false;
         // Reload all grades
         this.loadGrades();

@@ -1,3 +1,12 @@
+<!-- Notification Dialog -->
+<div
+  *ngIf="showNotification"
+  class="notification-dialog"
+  [ngClass]="notificationType"
+>
+  <span>{{ notificationMessage }}</span>
+  <button class="close-btn" (click)="closeNotification()">&times;</button>
+</div>
 <div class="page-container">
   <header class="page-header">
     <nav class="breadcrumb">
@@ -23,12 +32,20 @@
             placeholder="Search by ID..."
             class="search-input"
           />
-          <button class="btn btn-secondary" (click)="searchTechnology()" [disabled]="isSearching">
+          <button
+            class="btn btn-secondary"
+            (click)="searchTechnology()"
+            [disabled]="isSearching"
+          >
             <i class="fas fa-search" *ngIf="!isSearching"></i>
             <i class="fas fa-spinner fa-spin" *ngIf="isSearching"></i>
-            {{ isSearching ? 'Searching...' : 'Search' }}
+            {{ isSearching ? "Searching..." : "Search" }}
           </button>
-          <button class="btn btn-outline" (click)="clearSearch()" *ngIf="searchId">
+          <button
+            class="btn btn-outline"
+            (click)="clearSearch()"
+            *ngIf="searchId"
+          >
             <i class="fas fa-times"></i> Clear
           </button>
         </div>
@@ -117,12 +134,11 @@
             #idRef="ngModel"
             (blur)="validateField(idRef)"
           />
-          <div
-            class="error-message"
-            *ngIf="idRef.invalid && idRef.touched"
-          >
+          <div class="error-message" *ngIf="idRef.invalid && idRef.touched">
             <span *ngIf="idRef.errors?.['required']">ID is required</span>
-            <span *ngIf="idRef.errors?.['min']">ID must be a positive number</span>
+            <span *ngIf="idRef.errors?.['min']"
+              >ID must be a positive number</span
+            >
           </div>
         </div>
         <div class="form-group">
@@ -135,8 +151,12 @@
             minlength="3"
             maxlength="500"
             class="form-control"
-            [class.invalid]="technologyStackRef.invalid && technologyStackRef.touched"
-            [class.valid]="technologyStackRef.valid && technologyStackRef.touched"
+            [class.invalid]="
+              technologyStackRef.invalid && technologyStackRef.touched
+            "
+            [class.valid]="
+              technologyStackRef.valid && technologyStackRef.touched
+            "
             rows="3"
             placeholder="e.g., Angular, TypeScript, RxJS"
             #technologyStackRef="ngModel"
@@ -148,9 +168,15 @@
             class="error-message"
             *ngIf="technologyStackRef.invalid && technologyStackRef.touched"
           >
-            <span *ngIf="technologyStackRef.errors?.['required']">Technology stack is required</span>
-            <span *ngIf="technologyStackRef.errors?.['minlength']">Technology stack must be at least 3 characters</span>
-            <span *ngIf="technologyStackRef.errors?.['maxlength']">Technology stack cannot exceed 500 characters</span>
+            <span *ngIf="technologyStackRef.errors?.['required']"
+              >Technology stack is required</span
+            >
+            <span *ngIf="technologyStackRef.errors?.['minlength']"
+              >Technology stack must be at least 3 characters</span
+            >
+            <span *ngIf="technologyStackRef.errors?.['maxlength']"
+              >Technology stack cannot exceed 500 characters</span
+            >
           </div>
         </div>
         <div class="modal-actions">

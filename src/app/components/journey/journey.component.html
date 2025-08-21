@@ -100,6 +100,16 @@
     </div>
   </div>
 
+  <!-- Notification Dialog -->
+  <div
+    *ngIf="showNotification"
+    class="notification-dialog"
+    [ngClass]="notificationType"
+  >
+    <span>{{ notificationMessage }}</span>
+    <button class="close-btn" (click)="closeNotification()">&times;</button>
+  </div>
+
   <!-- Modal -->
   <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
     <div class="modal" (click)="$event.stopPropagation()">

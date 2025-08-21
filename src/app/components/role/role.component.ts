@@ -12,6 +12,10 @@ import { DataService, Role } from '../../services/data.service';
   styleUrls: ['./role.component.scss']
 })
 export class RoleComponent implements OnInit {
+  // Notification properties
+  showNotification = false;
+  notificationMessage = '';
+  notificationType: 'success' | 'error' = 'error';
   roles: Role[] = [];
   showModal = false;
   isEditing = false;
@@ -71,6 +75,7 @@ export class RoleComponent implements OnInit {
           },
           error: (error: Error) => {
             console.error('Error deleting role:', error);
+            this.showErrorNotification(this.getErrorMessage('', 'delete'));
           }
         });
       }
@@ -92,12 +97,29 @@ export class RoleComponent implements OnInit {
       },
       error: (error) => {
         this.searchResult = null;
-        alert(`No role found with ID ${this.searchId}`);
+        this.showErrorNotification(this.getErrorMessage('', 'search'));
         this.isSearching = false;
         // Reload all roles
         this.loadRoles();
       }
     });
+  }
+  showErrorNotification(message: string) {
+    this.notificationType = 'error';
+    this.notificationMessage = message;
+    this.showNotification = true;
+    setTimeout(() => {
+      this.showNotification = false;
+    }, 5000);
+  }
+
+  closeNotification() {
+    this.showNotification = false;
+  }
+
+  getErrorMessage(_error: any, action: string): string {
+    // Always show a generic error message
+    return `Failed to ${action} role. Please try again.`;
   }
 
   clearSearch() {

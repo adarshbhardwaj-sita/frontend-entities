@@ -1,3 +1,12 @@
+<!-- Notification Dialog -->
+<div
+  *ngIf="showNotification"
+  class="notification-dialog"
+  [ngClass]="notificationType"
+>
+  <span>{{ notificationMessage }}</span>
+  <button class="close-btn" (click)="closeNotification()">&times;</button>
+</div>
 <div class="page-container">
   <header class="page-header">
     <nav class="breadcrumb">
@@ -125,7 +134,9 @@
             *ngIf="roleIdRef.invalid && roleIdRef.touched"
           >
             <span *ngIf="roleIdRef.errors?.['required']">ID is required</span>
-            <span *ngIf="roleIdRef.errors?.['min']">ID must be a positive number</span>
+            <span *ngIf="roleIdRef.errors?.['min']"
+              >ID must be a positive number</span
+            >
           </div>
         </div>
         <div class="form-group">
@@ -150,9 +161,15 @@
             class="error-message"
             *ngIf="roleTitleRef.invalid && roleTitleRef.touched"
           >
-            <span *ngIf="roleTitleRef.errors?.['required']">Role title is required</span>
-            <span *ngIf="roleTitleRef.errors?.['minlength']">Role title must be at least 3 characters</span>
-            <span *ngIf="roleTitleRef.errors?.['maxlength']">Role title cannot exceed 50 characters</span>
+            <span *ngIf="roleTitleRef.errors?.['required']"
+              >Role title is required</span
+            >
+            <span *ngIf="roleTitleRef.errors?.['minlength']"
+              >Role title must be at least 3 characters</span
+            >
+            <span *ngIf="roleTitleRef.errors?.['maxlength']"
+              >Role title cannot exceed 50 characters</span
+            >
           </div>
         </div>
         <div class="form-group">
@@ -177,9 +194,15 @@
             class="error-message"
             *ngIf="projectNameRef.invalid && projectNameRef.touched"
           >
-            <span *ngIf="projectNameRef.errors?.['required']">Project name is required</span>
-            <span *ngIf="projectNameRef.errors?.['minlength']">Project name must be at least 3 characters</span>
-            <span *ngIf="projectNameRef.errors?.['maxlength']">Project name cannot exceed 100 characters</span>
+            <span *ngIf="projectNameRef.errors?.['required']"
+              >Project name is required</span
+            >
+            <span *ngIf="projectNameRef.errors?.['minlength']"
+              >Project name must be at least 3 characters</span
+            >
+            <span *ngIf="projectNameRef.errors?.['maxlength']"
+              >Project name cannot exceed 100 characters</span
+            >
           </div>
         </div>
         <div class="modal-actions">

@@ -12,6 +12,10 @@ import { DataService, Journey } from '../../services/data.service';
   styleUrls: ['./journey.component.scss']
 })
 export class JourneyComponent implements OnInit {
+  // Notification properties
+  showNotification = false;
+  notificationMessage = '';
+  notificationType: 'success' | 'error' = 'error';
   journeys: Journey[] = [];
   showModal = false;
   isEditing = false;
@@ -71,58 +75,54 @@ export class JourneyComponent implements OnInit {
   saveJourney() {
     console.log('saveJourney called');
     
-    // Basic validation
+    // Basic validation (replace alerts with error dialog)
     if (!this.currentJourney.journeyId || this.currentJourney.journeyId <= 0) {
-      alert('Please enter a valid positive ID');
+      this.showErrorNotification('Please enter a valid positive ID');
       return;
     }
     if (!this.currentJourney.journeyName || this.currentJourney.journeyName.trim().length < 3) {
-      alert('Please enter a valid journey name (at least 3 characters)');
+      this.showErrorNotification('Please enter a valid journey name (at least 3 characters)');
       return;
     }
     if (!this.currentJourney.journeyDescription || this.currentJourney.journeyDescription.trim().length < 10) {
-      alert('Please enter a valid journey description (at least 10 characters)');
+      this.showErrorNotification('Please enter a valid journey description (at least 10 characters)');
       return;
     }
     if (!this.currentJourney.destination || this.currentJourney.destination.trim().length < 2) {
-      alert('Please enter a valid destination (at least 2 characters)');
+      this.showErrorNotification('Please enter a valid destination (at least 2 characters)');
       return;
     }
     if (!this.currentJourney.durationInDays || this.currentJourney.durationInDays <= 0 || this.currentJourney.durationInDays > 365) {
-      alert('Please enter a valid duration between 1 and 365 days');
+      this.showErrorNotification('Please enter a valid duration between 1 and 365 days');
       return;
     }
     if (!this.currentJourney.budget || this.currentJourney.budget <= 0) {
-      alert('Please enter a valid budget amount greater than 0');
+      this.showErrorNotification('Please enter a valid budget amount greater than 0');
       return;
     }
     
     if (this.isEditing && this.currentJourney.journeyId) {
-      console.log('Updating journey:', this.currentJourney);
       this.dataService.updateJourney(this.currentJourney as Journey).subscribe({
         next: () => {
-          console.log('Journey updated successfully');
           this.dataService.getJourneys().subscribe(journeys => {
             this.journeys = journeys;
           });
           this.closeModal();
         },
-        error: (error: Error) => {
-          console.error('Error updating journey:', error);
+        error: () => {
+          this.showErrorNotification(this.getErrorMessage('', 'update'));
         }
       });
     } else {
-      console.log('Adding new journey:', this.currentJourney);
       this.dataService.addJourney(this.currentJourney as Omit<Journey, 'journeyId'>).subscribe({
         next: () => {
-          console.log('Journey added successfully');
           this.dataService.getJourneys().subscribe(journeys => {
             this.journeys = journeys;
           });
           this.closeModal();
         },
-        error: (error: Error) => {
-          console.error('Error adding journey:', error);
+        error: () => {
+          this.showErrorNotification(this.getErrorMessage('', 'add'));
         }
       });
     }
@@ -131,16 +131,14 @@ export class JourneyComponent implements OnInit {
   deleteJourney(id: number) {
     console.log('deleteJourney called with id:', id);
     if (confirm('Are you sure you want to delete this journey?')) {
-      console.log('Deleting journey with id:', id);
       this.dataService.deleteJourney(id).subscribe({
         next: () => {
-          console.log('Journey deleted successfully');
           this.dataService.getJourneys().subscribe(journeys => {
             this.journeys = journeys;
           });
         },
-        error: (error: Error) => {
-          console.error('Error deleting journey:', error);
+        error: () => {
+          this.showErrorNotification(this.getErrorMessage('', 'delete'));
         }
       });
     }
@@ -164,10 +162,9 @@ export class JourneyComponent implements OnInit {
   // Search methods
   searchJourney() {
     if (!this.searchId || this.searchId <= 0) {
-      alert('Please enter a valid positive ID');
+      this.showErrorNotification('Please enter a valid positive ID');
       return;
     }
-    
     this.isSearching = true;
     this.dataService.searchJourneyById(this.searchId).subscribe({
       next: (journey) => {
@@ -175,14 +172,32 @@ export class JourneyComponent implements OnInit {
         this.journeys = [journey];
         this.isSearching = false;
       },
-      error: (error) => {
+      error: () => {
         this.searchResult = null;
-        alert(`No journey found with ID ${this.searchId}`);
+        this.showErrorNotification(this.getErrorMessage('', 'search'));
         this.isSearching = false;
         // Reload all journeys
         this.loadJourneys();
       }
     });
+  }
+
+  showErrorNotification(message: string) {
+    this.notificationType = 'error';
+    this.notificationMessage = message;
+    this.showNotification = true;
+    setTimeout(() => {
+      this.showNotification = false;
+    }, 5000);
+  }
+
+  closeNotification() {
+    this.showNotification = false;
+  }
+
+  getErrorMessage(_error: any, action: string): string {
+    // Always show a generic error message
+    return `Failed to ${action} journey. Please try again.`;
   }
 
   clearSearch() {
