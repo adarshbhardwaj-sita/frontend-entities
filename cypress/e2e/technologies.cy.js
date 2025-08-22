@@ -34,10 +34,10 @@ describe("Master Portal - Technologies Management", () => {
     cy.contains("Updated technology").should("be.visible");
   });
 
-//   it("should delete a technology", () => {
-//     cy.contains(".entity-card", "Technologies").click();
-//     cy.get("table tbody tr").first().find("button[title='Delete']").click();
-//     cy.on('window:confirm', () => true);
-//     cy.get("table tbody tr").should("not.contain", "Angular");
-//   });
+  it("should delete a technology", () => {
+    cy.contains(".entity-card", "Technologies").click();
+    cy.get("table tbody tr").contains("td", "1").parent().find("button[title='Delete']").click();
+    cy.on('window:confirm', () => true);
+    cy.get("table tbody tr").should("not.contain", "Angular");
+  });
 });

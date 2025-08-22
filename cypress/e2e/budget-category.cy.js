@@ -40,7 +40,7 @@ describe("Master Portal - Budget Category Management", () => {
 
   it("should delete a budget category", () => {
     cy.contains(".entity-card", "Budget").click();
-    cy.get("table tbody tr").last().find("button[title='Delete']").click();
+    cy.get("table tbody tr").contains("td", "1").parent().find("button[title='Delete']").click();
     cy.on('window:confirm', () => true);
     cy.get("table tbody tr").should("not.contain", "Travel");
   });
