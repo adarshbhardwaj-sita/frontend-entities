@@ -75,8 +75,8 @@ describe('DataService', () => {
   // BudgetCategory
   it('should fetch budget categories', () => {
     const mockCategories: BudgetCategory[] = [
-      { id: 1, categoryType: 'Travel', budgetAmount: 1000, financialYear: '2025' },
-      { id: 2, categoryType: 'Training', budgetAmount: 2000, financialYear: '2025' }
+      { id: 1, categoryType: 'Travel', budgetAmount: 1000, financialYear: 2025 },
+      { id: 2, categoryType: 'Training', budgetAmount: 2000, financialYear: 2025 }
     ];
     service.getBudgetCategories().subscribe(categories => {
       expect(categories).toEqual(mockCategories);
@@ -87,7 +87,7 @@ describe('DataService', () => {
   });
 
   it('should add a budget category', () => {
-    const newCategory = { categoryType: 'Equipment', budgetAmount: 3000, financialYear: '2025' };
+    const newCategory = { categoryType: 'Equipment', budgetAmount: 3000, financialYear: 2025 };
     const mockCategory: BudgetCategory = { id: 3, ...newCategory };
     service.addBudgetCategory(newCategory).subscribe(category => {
       expect(category).toEqual(mockCategory);
@@ -98,7 +98,7 @@ describe('DataService', () => {
   });
 
   it('should update a budget category', () => {
-    const updatedCategory: BudgetCategory = { id: 1, categoryType: 'Travel Updated', budgetAmount: 1500, financialYear: '2025' };
+    const updatedCategory: BudgetCategory = { id: 1, categoryType: 'Travel Updated', budgetAmount: 1500, financialYear: 2025 };
     service.updateBudgetCategory(updatedCategory).subscribe(category => {
       expect(category).toEqual(updatedCategory);
     });
@@ -246,7 +246,7 @@ describe('DataService', () => {
     const payload: Omit<Technology, 'id'> = { technologyStack: 'Node, Express' } as any;
     const mockTech: Technology = { id: 3, technologyStack: 'Node, Express' };
     service.addTechnology(payload).subscribe(t => expect(t).toEqual(mockTech));
-    const req = httpMock.expectOne(`${(service as any)['apiUrl']}/Technology`);
+    const req = httpMock.expectOne(`${(service as any)['apiUrl']}/Technologies`);
     expect(req.request.method).toBe('POST');
     req.flush(mockTech);
   });
@@ -254,14 +254,14 @@ describe('DataService', () => {
   it('should update a technology', () => {
     const updated: Technology = { id: 1, technologyStack: 'Angular, TS, RxJS' };
     service.updateTechnology(updated).subscribe(t => expect(t).toEqual(updated));
-    const req = httpMock.expectOne(`${(service as any)['apiUrl']}/Technology/1`);
+    const req = httpMock.expectOne(`${(service as any)['apiUrl']}/Technologies/1`);
     expect(req.request.method).toBe('PUT');
     req.flush(updated);
   });
 
   it('should delete a technology', () => {
     service.deleteTechnology(1).subscribe(res => expect(res).toEqual({}));
-    const req = httpMock.expectOne(`${(service as any)['apiUrl']}/Technology/1`);
+    const req = httpMock.expectOne(`${(service as any)['apiUrl']}/Technologies/1`);
     expect(req.request.method).toBe('DELETE');
     req.flush({});
   });
